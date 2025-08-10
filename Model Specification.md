@@ -1,29 +1,20 @@
 # MutualMetrics
 
-Tareas pendientes:
-
-1. Nombre - CalcuLibre
-2. objetivo claro del proyecto y para que lo desarrollamos
-3. historias de usuario -> criterios de aceptacion
-4. diagrama de flujo
-
-5. enumerar las funcionalidades y empezar su desarrollo
-
-6.
-
-# Model Spec: Herramienta Web de Análisis de Funciones Cuadráticas
+# Model Spec: Plataforma Web de Análisis Matemático y Empresarial
 
 ## 1. Introducción
 
-Este documento dirige al equipo de desarrollo en la implementación de una aplicación web gratuita y de uso libre que permita a administradores de empresa, estudiantes y cualquier usuario interesado realizar análisis sobre funciones cuadráticas (raíces, vértice, óptimos económicos, costos variables, márgenes, etc.). Sirve como fuente de verdad para diseñar la arquitectura, definir requisitos y preparar historias de usuario, criterios de aceptación y diagramas de flujo.
+Este documento dirige al equipo de desarrollo en la implementación de una aplicación web gratuita y de uso libre que permita a administradores de empresa, estudiantes y cualquier usuario interesado realizar análisis sobre funciones cuadráticas y análisis empresarial (ingresos, costos, beneficios, punto de equilibrio, etc.).
+
+La plataforma incluye un sistema completo de Business Analytics con navegación modular, internacionalización completa y sistema de temas adaptativos.
+
+Sirve como fuente de verdad para diseñar la arquitectura, definir requisitos y preparar historias de usuario, criterios de aceptación y diagramas de flujo.
 
 ---
 
 ## 2. Audiencia
 
-- **Equipo de desarrollo full-stack**
-- **Arquitectos de software**
-- **QA / DevOps**
+- **Equipo de desarrollo MutualMetrics**
 
 _No está dirigido al usuario final._
 
@@ -31,15 +22,24 @@ _No está dirigido al usuario final._
 
 ## 3. Propósito y Alcance
 
-- **Propósito**: Facilitar cálculos estratégicos basados en modelos cuadráticos para apoyar la toma de decisiones en producción, precios, inversión y operación.
+- **Propósito**: Facilitar cálculos estratégicos basados en modelos cuadráticos y análisis empresarial para apoyar la toma de decisiones en producción, precios, inversión y operación.
 - **Alcance**:
-  - Cálculo de raíces y discriminante.
-  - Determinación del vértice (máximo/mínimo).
-  - Cálculo de punto óptimo para ingresos/beneficio.
-  - Evaluación de costos variables y márgenes (ingreso marginal, costo marginal, beneficio marginal).
-  - Visualización gráfica interactiva.
-  - Reporte descargable (PDF o CSV).
-  - Historial local de análisis recientes.
+  - **Análisis Matemático**: Cálculo de raíces, discriminante, vértice (máximo/mínimo), punto óptimo.
+  - **Business Analytics Suite**: 
+    - Análisis de Ingresos Totales
+    - Análisis de Costos (fijos y variables)
+    - Análisis de Beneficios Netos
+    - Análisis de Punto de Equilibrio
+  - **Interfaz**:
+    - Sistema de navegación modular con sidebar
+    - Internacionalización completa (Español/Inglés)
+    - Sistema de temas (Light/Dark)
+    - Diseño responsive y accesible
+  - **Funcionalidades Core**:
+    - Visualización gráfica interactiva
+    - Reporte descargable (PDF/CSV) por módulo
+    - Historial local de análisis recientes
+    - Validación en tiempo real
 
 ---
 
@@ -48,8 +48,11 @@ _No está dirigido al usuario final._
 1. **Precisión**: Tolerancia de error ≤ 10⁻⁶ en todos los resultados.
 2. **Usabilidad**: Interfaz limpia, responsive y accesible (WCAG 2.1 AA).
 3. **Rendimiento**: Latencia de cálculo < 200 ms bajo carga normal.
-4. **Extensibilidad**: Motor de cálculo desacoplado para incorporar futuros modelos (polinomios de grado superior, análisis estadísticos).
+4. **Extensibilidad**: Motor de cálculo desacoplado para incorporar futuros modelos.
 5. **Mantenibilidad**: Código modular y documentado, con cobertura de pruebas ≥ 85 %.
+6. **Internacionalización**: Soporte completo para múltiples idiomas.
+7. **Accesibilidad Visual**: Sistema de temas adaptativos.
+8. **Modularidad**: Arquitectura de microservicios en el frontend.
 
 ---
 
@@ -57,13 +60,16 @@ _No está dirigido al usuario final._
 
 | ID      | Descripción                                                                         |
 | ------- | ----------------------------------------------------------------------------------- |
-| **RF1** | Formulario de entrada: coeficientes `a`, `b`, `c` y selector de modo de análisis.   |
-| **RF2** | Cálculo backend de: raíces, vértice, punto óptimo, márgenes y valores intermedios.  |
-| **RF3** | Gráfica interactiva de la parábola y puntos clave (zoom, tooltips).                 |
-| **RF4** | Descarga de informe con resultados y gráfica (PDF y/o CSV).                         |
-| **RF5** | Historial local (últimos 10 análisis) con posibilidad de “recalcular”.              |
-| **RF6** | Validación de entrada en tiempo real (`a ≠ 0`, campos numéricos, rangos razonables) |
-| **RF7** | Endpoint de salud (`/health`) para monitoreo y uptime.                              |
+| **RF1** | **Navegación Modular**: Sidebar colapsible con acceso a todos los módulos de análisis. |
+| **RF2** | **Análisis Cuadrático**: Formulario para coeficientes `a`, `b`, `c` con cálculo completo. |
+| **RF3** | **Business Analytics**: Módulos especializados para Revenue, Costs, Profit, Break-even. |
+| **RF4** | **Internacionalización**: Toggle Español/Inglés con persistencia de preferencias. |
+| **RF5** | **Sistema de Temas**: Toggle Light/Dark con detección automática de preferencias. |
+| **RF6** | **Visualización**: Gráficas interactivas con Chart.js (zoom, tooltips, puntos clave). |
+| **RF7** | **Descargas**: Reportes especializados por módulo (PDF/CSV) con datos completos. |
+| **RF8** | **Historial**: Persistencia local de análisis con funcionalidad de recalcular. |
+| **RF9** | **Validación**: Tiempo real con feedback visual y mensajes de error específicos. |
+| **RF10** | **API Health**: Endpoints de monitoreo y verificación de estado del servicio. |
 
 ---
 
@@ -75,127 +81,236 @@ _No está dirigido al usuario final._
 - **RNF4**: Seguridad: HTTPS obligatorio, CORS restringido al dominio oficial, rate-limiting.
 - **RNF5**: Accesibilidad y compatibilidad con navegadores modernos (Chrome, Firefox, Edge, Safari).
 - **RNF6**: Registro de errores y métricas (Logging, APM).
+- **RNF7**: Internacionalización: Arquitectura modular escalable, carga de idiomas < 100ms, soporte RTL preparado.
+- **RNF8**: Performance UI: Transiciones de tema < 200ms, sidebar responsivo.
+- **RNF9**: Memory Management: Límite de 50MB para historial local.
 
 ---
 
 ## 7. Arquitectura de Alto Nivel
 
-[ Cliente SPA ] ⇄ [ API Gateway / Backend ] ⇄ [ Módulo de Cálculo ]
-↓ ↓ ↓
-React.js REST/JSON Math Engine
-(HTTPS) (desacoplado)
+```
+┌───────────────────────────────────────────────────────────────┐
+│                       CLIENTE SPA                             │
+│  ┌─────────────┐ ┌──────────────┐ ┌─────────────────────┐     │
+│  │   Sidebar   │ │     Theme    │ │Internationalization │     │
+│  │  Navigation │ │    System    │ │      (i18n)         │     │
+│  └─────────────┘ └──────────────┘ └─────────────────────┘     │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │            Business Analytics Modules                   │  │
+│  │    [Bhaskara] [Revenue] [Costs] [Profit] [Break-even]   │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│     React Router v7 + TypeScript + Tailwind CSS + Chart.js    │
+└───────────────────────────────────────────────────────────────┘
+                              ⇅ HTTPS/REST
+┌───────────────────────────────────────────────────────────────┐
+│                        BACKEND API                            │
+│     ┌─────────────┐ ┌──────────────┐ ┌─────────────────────┐  │
+│     │   Bhaskara  │ │   Business   │ │      Download       │  │
+│     │   Analysis  │ │   Analytics  │ │      Services       │  │
+│     │             │ │   Endpoints  │ │                     │  │
+│     └─────────────┘ └──────────────┘ └─────────────────────┘  │
+│     FastAPI + Uvicorn + Python Mathematical Libraries         │
+└───────────────────────────────────────────────────────────────┘
+                              ⇅
+┌───────────────────────────────────────────────────────────────┐
+│                      CÁLCULO ENGINE                           │
+│           Modular Mathematical & Business Logic               │
+└───────────────────────────────────────────────────────────────┘
+```
 
-1. **Cliente (SPA)**
-   - Framework: React, Vue o similar.
-   - Consumo de API REST.
-   - Chart library (Chart.js, D3.js).
-2. **Backend**
-   - Framework web ligero (por ejemplo, FastAPI, Express, Spring Boot).
-   - Endpoints REST para análisis y descargas.
-   - Capa de validación y orquestación.
-3. **Módulo de Cálculo**
-   - Componente independiente (librería interna) que recibe `(a,b,c,mode)` y devuelve resultados.
-   - Interfaces bien definidas para reemplazo futuro.
+### **Componentes:**
+
+1. **Cliente SPA (React Router v7)**
+   - **Navegación**: Sidebar modular con estado colapsible
+   - **Temas**: Light/Dark mode con preferencias del sistema
+   - **i18n**: Arquitectura modular escalable con react-i18next
+     - Traducciones por dominio (navigation, forms, modules)
+     - Estructura `/es/` y `/en/` simétrica
+     - Agregadores principales para cada idioma
+     - Escalabilidad preparada para nuevos módulos
+   - **Módulos**: 5 análisis especializados con routing anidado
+   - **Visualización**: Chart.js para gráficas interactivas
+
+2. **Backend API (FastAPI)**
+   - **Endpoints Cuadráticos**: `/analizar/bhaskara`, `/analizar/economia`
+   - **Endpoints Business**: `/analisis/ingreso-total`, `/analisis/costo-total`, `/analisis/beneficio`, `/analisis/punto-equilibrio`
+   - **Descargas**: `/descargar/*` para cada tipo de análisis
+   - **Monitoreo**: `/health` con métricas detalladas
+
+3. **Engine de Cálculo**
+   - Matemático: Funciones cuadráticas, discriminantes, vértices
+   - Empresarial: Revenue, costs, profit, break-even calculations
+   - Modular y extensible para futuros tipos de análisis
 
 ---
 
 ## 8. Especificación de API
 
-### 8.1 POST `/api/analyze`
+### 8.1 Endpoints de Análisis Cuadrático
 
-- **Descripción**: Ejecuta el análisis cuadrático.
-- **Request** (JSON):
+#### POST `/analizar/bhaskara`
+- **Descripción**: Análisis completo de función cuadrática
+- **Request**: `{ "a": 1.5, "b": -4.2, "c": 2.0, "timestamp": "ISO", "clientVersion": "1.0.0" }`
+- **Response**: Raíces, vértice, discriminante, ecuación, análisis completo
 
-  ```json
-  {
-    "a": 1.5,
-    "b": -4.2,
-    "c": 2.0,
-    "mode": "full" // "roots" | "vertex" | "optimal" | "marginals" | "full"
-  }
-  ```
+#### POST `/analizar/economia`
+- **Descripción**: Análisis económico especializado
+- **Request**: Coeficientes + parámetros económicos
+- **Response**: Óptimos, marginales, puntos de equilibrio
 
-- **Response** (200 OK, JSON):
+### 8.2 Endpoints de Business Analytics
 
-```json
-{
-  "roots": [ x1, x2 ],
-  "vertex": { "x": xv, "y": yv },
-  "optimal": { "x": x_opt, "value": val_opt },
-  "marginals": {
-    "revenue": mr,
-    "cost": mc,
-    "profit": mp
-  },
-  "points": [ { "x":…, "y":… }, … ]
-}
-```
+#### GET `/analisis/ingreso-total`
+- **Descripción**: Cálculo de ingresos totales
+- **Parameters**: `precio`, `cantidad`, `description`
+- **Response**: Análisis de revenue con proyecciones
 
-- **Códigos de error**
+#### GET `/analisis/costo-total`
+- **Descripción**: Análisis de costos fijos y variables
+- **Parameters**: Estructura de costos empresarial
+- **Response**: Breakdown completo de costos
 
-400: entrada inválida (a == 0, valores no numéricos).
+#### GET `/analisis/beneficio`
+- **Descripción**: Cálculo de beneficios netos
+- **Parameters**: Ingresos, costos, períodos
+- **Response**: Análisis de rentabilidad
 
-500: error interno.
+#### GET `/analisis/punto-equilibrio`
+- **Descripción**: Punto de equilibrio operativo
+- **Parameters**: Costos fijos, variables, precio unitario
+- **Response**: Break-even point y análisis de sensibilidad
 
-### 8.2 GET /health
+### 8.3 Endpoints de Descarga
 
-- **Descripción**: Verifica el estado del servicio.
-- **Response** 200 OK con { "status": "ok" }.
+#### GET `/descargar/analisis-bhaskara`
+#### GET `/descargar/analisis-ingresos`
+#### GET `/descargar/analisis-costos`
+#### GET `/descargar/analisis-beneficios`
+#### GET `/descargar/analisis-equilibrio`
+- **Formatos**: PDF, CSV, JSON
+- **Incluye**: Gráficas, tablas, metadatos
+
+### 8.4 Monitoreo
+
+#### GET `/health`
+- **Response**: Estado del servicio, métricas básicas
+
+#### GET `/metrics`
+- **Response**: Métricas detalladas para monitoring
+
+---
 
 ## 9. Modelo de Datos
 
-AnalysisRecord:
-id: string (UUID)
-a: number
-b: number
-c: number
-mode: enum [roots, vertex, optimal, marginals, full]
-results:
-roots: [number, number]
-vertex:
-x: number
-y: number
-optimal:
-x: number
-value: number
-marginals:
-revenue: number
-cost: number
-profit: number
-points: - x: number
-y: number
-timestamp: string (ISO 8601)
+### 9.1 Análisis Cuadrático
+```typescript
+interface QuadraticAnalysis {
+  id: string (UUID)
+  coefficients: { a: number, b: number, c: number }
+  mode: 'roots' | 'vertex' | 'optimal' | 'full'
+  results: {
+    equation: string
+    discriminant: number
+    roots: { x1: number | null, x2: number | null }
+    vertex: { x: number, y: number }
+    analysisId: string
+  }
+  metadata: {
+    timestamp: string (ISO 8601)
+    clientVersion: string
+    sessionId?: string
+  }
+}
+```
 
-Nota: El almacenamiento de registros es opcional; por defecto, el historial se maneja en el cliente.
+### 9.2 Business Analytics
+```typescript
+interface RevenueAnalysis {
+  id: string
+  params: { precio: number, cantidad: number }
+  results: { ingresoTotal: number, proyecciones: number[] }
+  timestamp: string
+}
 
-# 10. Seguridad y Privacidad
+interface CostAnalysis {
+  id: string
+  params: { costosFijos: number, costosVariables: number }
+  results: { costoTotal: number, breakdown: object }
+  timestamp: string
+}
 
-Comunicación cifrada: TLS en todos los endpoints.
+interface ProfitAnalysis {
+  id: string
+  params: { ingresos: number, costos: number }
+  results: { beneficioNeto: number, margen: number }
+  timestamp: string
+}
 
-CORS: Solo el dominio oficial puede invocar la API.
+interface BreakEvenAnalysis {
+  id: string
+  params: { costosFijos: number, precioUnitario: number, costoVariable: number }
+  results: { puntoEquilibrio: number, analisisSensibilidad: object }
+  timestamp: string
+}
+```
 
-Rate-limiting: Tope de 100 peticiones/minuto/IP.
+### 9.3 UI State Management
+```typescript
+interface AppState {
+  theme: 'light' | 'dark' | 'system'
+  language: 'es' | 'en'
+  navigation: {
+    sidebarCollapsed: boolean
+    currentModule: AnalysisModule
+  }
+  history: AnalysisRecord[]
+}
+```
 
-Datos de usuario: No se almacenan datos personales a menos que se habilite registro opcional.
+**Nota**: El almacenamiento principal se maneja en el cliente con localStorage. Backend stateless para escalabilidad.
+
+---
+
+## 10. Seguridad y Privacidad
+
+- **Comunicación cifrada**: TLS en todos los endpoints.
+- **CORS**: Solo el dominio oficial puede invocar la API.
+- **Rate-limiting**: Tope de 100 peticiones/minuto/IP.
+- **CSP Headers**: Content Security Policy configurado.
+- **XSS Protection**: Sanitización de inputs y outputs.
+- **Data Privacy**: Cumplimiento GDPR para usuarios europeos.
+- **Datos de usuario**: No se almacenan datos personales a menos que se habilite registro opcional.
+
+---
 
 ## 11. Estrategia de Pruebas
 
-Unitarias: Cada función de cálculo y componente UI.
+- **Unitarias**: Cada función de cálculo y componente UI (≥85% cobertura).
+- **Integración**: Validar flujos frontend ↔ backend con datos reales.
+- **E2E**: Casos críticos (cálculos key, descarga de reportes) con Cypress.
+- **A11y Testing**: Verificación automática de accesibilidad.
+- **i18n Testing**: Validación de traducciones y contextos.
+- **Performance Testing**: Core Web Vitals y métricas de UX.
+- **CI/CD**: Automatización en cada PR con pipelines completos.
 
-Integración: Validar flujos frontend ↔ backend con datos reales.
-
-E2E: Casos críticos (cálculos key, descarga de reportes) con Cypress o Playwright.
-
-CI/CD: Automatización en cada PR con pipelines de linting, tests y despliegue a entorno de staging.
+---
 
 ## 12. Glosario
 
-Bhaskara: Método para resolver ecuaciones cuadráticas.
+- **Bhaskara**: Método para resolver ecuaciones cuadráticas.
+- **Vértice**: Punto de máximo o mínimo en la parábola.
+- **Óptimo económico**: Valor de x que maximiza ingreso o beneficio.
+- **Marginal**: Variación discreta de ingreso, costo o beneficio.
+- **SPA**: Single-Page Application.
+- **Sidebar**: Panel de navegación lateral colapsible.
+- **i18n**: Internacionalización (internationalization).
+- **Theme System**: Sistema de temas visuales adaptativos.
+- **Business Analytics**: Suite de análisis empresarial integrado.
+- **Break-even**: Punto de equilibrio operativo empresarial.
 
-Vértice: Punto de máximo o mínimo en la parábola.
+---
 
-Óptimo económico: Valor de x que maximiza ingreso o beneficio.
-
-Marginal: Variación discreta de ingreso, costo o beneficio.
-
-SPA: Single-Page Application.
+**Versión**: 1.0  
+**Última actualización**: Enero 2025  
+**Próxima revisión**: Abril 2025
