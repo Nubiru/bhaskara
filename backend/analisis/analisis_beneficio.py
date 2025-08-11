@@ -1,7 +1,18 @@
-from analisis_ingreso_total import calcular_ingreso_total
-from analisis_costo_total import calcular_costo_total
+# app/analisis/analisis_beneficio.py
+from fastapi import APIRouter
+from pydantic import BaseModel
 
-def calcular_beneficio(precio_unitario: float, cantidad: float, costo_fijo: float, costo_variable_unitario: float):
-    ingreso = calcular_ingreso_total(precio_unitario, cantidad)
-    costo = calcular_costo_total(costo_fijo, costo_variable_unitario, cantidad)
-    return ingreso - costo
+router = APIRouter(prefix="/analisis/beneficio", tags=["Beneficio"])
+
+class BeneficioRequest(BaseModel):
+    ingreso_total: float
+    costo_total: float
+
+@router.post("/")
+def calcular_beneficio(data: BeneficioRequest):
+    beneficio = data.ingreso_total - data.costo_total
+    return {
+        "ingreso_total": data.ingreso_total,
+        "costo_total": data.costo_total,
+        "beneficio": beneficio
+    }

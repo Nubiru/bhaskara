@@ -45,19 +45,19 @@ def descargar_ingreso(precio_unitario: float, cantidad: float):
 
 from fastapi import FastAPI
 from bhaskara import router as bhaskara_router
-from analisis import ingreso_total, costo_total, beneficio, punto_equilibrio
-from descargas import ingreso_total as descargar_ingreso_total
-from descargas import costo_total as descargar_costo_total
-from descargas import beneficio as descargar_beneficio
-from descargas import punto_equilibrio as descargar_punto_equilibrio
+from analisis import analisis_ingreso_total, analisis_costo_total, analisis_beneficio, analisis_punto_equilibrio
+from descargas import desc_ingreso_total as descargar_ingreso_total
+from descargas import desc_costo_total as descargar_costo_total
+from descargas import desc_beneficio as descargar_beneficio
+from descargas import desc_punto_equilibrio as descargar_punto_equilibrio
 
 app = FastAPI()
 
 app.include_router(bhaskara_router)
-app.include_router(ingreso_total.router)
-app.include_router(costo_total.router)
-app.include_router(beneficio.router)
-app.include_router(punto_equilibrio.router)
+app.include_router(analisis_ingreso_total.router)
+app.include_router(analisis_costo_total.router)
+app.include_router(analisis_beneficio.router)
+app.include_router(analisis_punto_equilibrio.router)
 app.include_router(descargar_ingreso_total.router)
 app.include_router(descargar_costo_total.router)
 app.include_router(descargar_beneficio.router)
