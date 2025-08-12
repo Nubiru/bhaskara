@@ -1,0 +1,8 @@
+Este archivo contiene todas las dependencias necesarias para que el backend funcione.
+
+fastapi
+uvicorn
+python-dotenv
+
+Si más adelante agregas librerías para cálculos (por ejemplo, numpy o pandas), las sumas aquí.
+
