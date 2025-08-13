@@ -1,0 +1,60 @@
+/*
+ * @fileoverview Variables CSS para sistema de temas (claro/oscuro)
+ * Paleta basada en Plan_UI_Revamp_Color_Themes.md
+ */
+
+:root {
+  /* Light Theme Colors - warmer palette */
+  --color-primary: #1b3c53;       /* Azul profundo */
+  --color-secondary: #456882;     /* Azul medio */
+  --color-accent: #e6d4c9;        /* Beige más cálido */
+  --color-background: #fff8ef;    /* Crema cálida */
+  --color-surface: #fff4e6;       /* Superficie cálida */
+  --color-surface-elevated: #ffffff; /* Superficie elevada (cards) */
+  --color-text: #1b3c53;          /* Texto principal */
+  --color-text-secondary: #5a748a;/* Texto secundario ligeramente más gris */
+  --color-divider: #eadfd2;       /* Divisor cálido */
+
+  /* Semantic */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Accessibility & Focus */
+  --focus-ring: #1b3c53;
+  --link: #1b3c53;
+  --link-hover: #456882;
+  
+  /* On-color text (for badges/alerts) */
+  --on-success-text: #083d2b;
+  --on-warning-text: #7a4e0b;
+  --on-error-text: #7f1d1d;
+  --on-info-text: #0b3b83;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme Colors */
+  --color-primary: #456882;       /* Azul más claro */
+  --color-secondary: #1b3c53;     /* Azul más oscuro */
+  --color-accent: #d2c1b6;        /* Beige */
+  --color-background: #0f1a23;    /* Fondo muy oscuro */
+  --color-surface: #1a2a35;       /* Superficie oscura */
+  --color-text: #f9f3ef;          /* Texto claro */
+  --color-text-secondary: #d2c1b6;/* Texto secundario */
+  --color-divider: #2b3a45;        /* Divisor oscuro */
+  --color-surface-elevated: #223445; /* Superficie elevada (cards) más clara que el fondo */
+
+  /* Accessibility & Focus */
+  --focus-ring: #d2c1b6;
+  --link: #d2c1b6;
+  --link-hover: #f9f3ef;
+  
+  /* On-color text (for badges/alerts) */
+  --on-success-text: #e6fff3;
+  --on-warning-text: #fff3cf;
+  --on-error-text: #ffe1e1;
+  --on-info-text: #dbeafe;
+}
+
+

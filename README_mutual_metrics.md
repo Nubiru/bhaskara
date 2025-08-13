@@ -36,7 +36,7 @@ Una aplicación React SPA moderna para análisis matemático de funciones cuadr�
 ### Frontend Core
 - **Framework**: React Router v7 (SPA mode)
 - **Lenguaje**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4 con custom themes
+- **Styling**: Tailwind CSS v4 (plugin oficial `@tailwindcss/vite`)
 - **State Management**: React Hooks + Context API
 
 ### Librerías Especializadas
@@ -51,6 +51,18 @@ Una aplicación React SPA moderna para análisis matemático de funciones cuadr�
 - **Linting**: ESLint + Prettier + Husky
 - **Accessibility**: jest-axe para testing a11y
 - **Performance**: Lighthouse CI integrado
+
+## ⚙️ Configuración clave
+
+- `frontend/vite.config.ts`: plugins principales
+  - `@tailwindcss/vite` (Tailwind v4)
+  - `@react-router/dev/vite` (React Router v7, modo SPA)
+  - `vite-tsconfig-paths` (paths TS)
+- `frontend/react-router.config.ts`: configuración específica de React Router
+- `frontend/tsconfig.json` y `frontend/tsconfig.test.json`: TypeScript y testing
+- `frontend/jest.config.cjs`: configuración de Jest
+- `frontend/vite.config.ts`: build y dev server via Vite
+- `tailwind.config.js`: (opcional) requerido solo si se personaliza Tailwind más allá del plugin
 
 ## 🚀 Instalación
 
@@ -69,7 +81,7 @@ cd bhaskara/frontend
 npm install
 
 # 3. Configurar variables de entorno
-cp .env.example .env.local
+# Ver guía en docs/env.md y crea un archivo .env.local con las variables
 
 # 4. Iniciar desarrollo
 npm run dev
@@ -116,8 +128,8 @@ frontend/
 │   │   ├── navigation/          # Sidebar y navegación
 │   │   ├── providers/           # Theme + Language providers
 │   │   ├── ui/                  # Loading, toggles, buttons
-│   │   ├── forms/               # QuadraticForm y validaciones
-│   │   ├── charts/              # QuadraticChart y visualización
+│   │   ├── forms/               # BhaskaraForm y validaciones
+│   │   ├── charts/              # BhaskaraChart y visualización
 │   │   ├── history/             # HistoryList y gestión
 │   │   └── layout/              # Header, Footer globales
 │   │
@@ -170,7 +182,7 @@ frontend/
 ├── public/                       # Assets estáticos
 ├── react-router.config.ts        # Configuración SPA + optimizaciones
 ├── tsconfig.json                 # TypeScript config estricto
-├── tailwind.config.js            # Tailwind v4 + custom themes
+├── tailwind.config.js            # (opcional) Tailwind v4 + custom themes
 └── vite.config.ts                # Vite optimizado para performance
 ```
 
@@ -223,7 +235,7 @@ npm run test:e2e
 - **Cobertura de Tests**: ≥ 85%
 - **TypeScript Strict**: 100% type-safe
 - **Lighthouse Score**: ≥ 90
-- **Accessibility**: WCAG 2.1 AA compliance
+- **Accesibilidad**: WCAG 2.1 AA compliance
 - **Bundle Size**: < 1MB compressed
 
 ## 🔧 Scripts de Desarrollo
@@ -332,6 +344,19 @@ npm run build:staging
 npm run build:prod
 ```
 
+### Ejecutar con Docker (recomendado)
+```bash
+# Construir e iniciar todo (frontend + backend)
+docker compose up --build
+
+# Accesos
+# Frontend: http://localhost:5173
+# Backend:  http://localhost:8000 (docs en /docs)
+```
+Notas:
+- El frontend en contenedor se sirve estáticamente con Nginx.
+- El frontend consume la API en `http://backend:8000` dentro de la red de Compose.
+
 ### Optimizaciones de Build
 - **Tree Shaking**: Eliminación de código no usado
 - **Minification**: Compresión optimizada
@@ -358,11 +383,28 @@ npm run build:prod
 
 Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
+## 📚 Documentación adicional
+
+- API Spec (OpenAPI): `docs/openapi.yaml`
+- Convenciones API: `docs/api-conventions.md`
+- Entornos/ENV: `docs/env.md`
+- Deployment & Runbook: `docs/deployment-and-runbook.md`
+- Seguridad & Privacidad: `docs/security-and-privacy.md`
+- Observabilidad: `docs/observability.md`
+- Testing Strategy: `docs/testing-strategy.md`
+- Design Tokens/Temas: `docs/design-tokens.md`
+- ADRs: `docs/adr/`
+ - Reinicio backend (venv): ver `README_backend.md` (no duplicamos comandos aquí)
+
+## 🗣️ Política de idioma de documentación
+
+Para mantener consistencia, la documentación del repositorio usará **Español** como idioma principal. Cuando existan recursos bilingües (ES/EN) se indicará explícitamente. Las cadenas de UI continúan con soporte ES/EN vía i18n.
+
 ## 📞 Contacto y Soporte
 
 - **Email**: contact@mutualmetrics.com
 - **GitHub Issues**: Para bugs y feature requests
-- **Documentación**: [docs.mutualmetrics.com](https://docs.mutualmetrics.com)
+- **Documentación**: `https://docs.mutualmetrics.com`
 - **Especificación**: Ver [Model Specification.md](Model%20Specification.md)
 
 ## 🙏 Agradecimientos

@@ -119,6 +119,8 @@ _No está dirigido al usuario final._
 └───────────────────────────────────────────────────────────────┘
 ```
 
+Nota operativa: Para desarrollo local se recomienda usar contenedores con Docker Compose (`docker compose up --build`). El frontend se sirve estáticamente (Nginx) y el backend expone documentación en `/docs`.
+
 ### **Componentes:**
 
 1. **Cliente SPA (React Router v7)**
