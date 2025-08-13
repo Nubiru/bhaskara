@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: MutualMetrics API
+  version: 0.1.0
+  description: API para análisis cuadrático y business analytics
+servers:
+  - url: http://localhost:8000
+paths:
+  /analizar/bhaskara:
+    post:
+      summary: Análisis completo de función cuadrática
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                a: { type: number }
+                b: { type: number }
+                c: { type: number }
+                mode: { type: string, enum: [roots, vertex, optimal, full], default: full }
+                clientVersion: { type: string }
+                timestamp: { type: string, format: date-time }
+              required: [a, b, c]
+      responses:
+        '200':
+          description: Resultado del análisis cuadrático
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  equation: { type: string }
+                  discriminant: { type: number }
+                  roots:
+                    type: object
+                    properties:
+                      x1: { type: number, nullable: true }
+                      x2: { type: number, nullable: true }
+                  vertex:
+                    type: object
+                    properties:
+                      x: { type: number }
+                      y: { type: number }
+  /analisis/ingreso-total:
+    post:
+      summary: Cálculo de ingresos totales
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                precio: { type: number }
+                cantidad: { type: number }
+                description: { type: string }
+              required: [precio, cantidad]
+      responses:
+        '200':
+          description: Resultado de ingresos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingresoTotal: { type: number }
+                  proyecciones:
+                    type: array
+                    items: { type: number }
+  /analisis/costo-total:
+    post:
+      summary: Análisis de costos totales
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                costosFijos: { type: number }
+                costosVariables: { type: number }
+              required: [costosFijos, costosVariables]
+      responses:
+        '200':
+          description: Resultado de costos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  costoTotal: { type: number }
+                  breakdown:
+                    type: object
+  /analisis/beneficio:
+    post:
+      summary: Cálculo de beneficios netos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ingresos: { type: number }
+                costos: { type: number }
+              required: [ingresos, costos]
+      responses:
+        '200':
+          description: Resultado de beneficios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  beneficioNeto: { type: number }
+                  margen: { type: number }
+  /analisis/punto-equilibrio:
+    post:
+      summary: Punto de equilibrio operativo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                costosFijos: { type: number }
+                precioUnitario: { type: number }
+                costoVariable: { type: number }
+              required: [costosFijos, precioUnitario, costoVariable]
+      responses:
+        '200':
+          description: Resultado de punto de equilibrio
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  puntoEquilibrio: { type: number }
+                  analisisSensibilidad:
+                    type: object
+  /health:
+    get:
+      summary: Estado del servicio
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  uptime: { type: number }
+                  version: { type: string }
+
+

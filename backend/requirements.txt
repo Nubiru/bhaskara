@@ -1,0 +1,7 @@
+# Dependencias del backend FastAPI
+fastapi
+uvicorn[standard]
+python-dotenv
+# pydantic ya es dependencia de fastapi
+# numpy
+# pandas
