@@ -119,7 +119,7 @@ _No está dirigido al usuario final._
 └───────────────────────────────────────────────────────────────┘
 ```
 
-Nota operativa: Para desarrollo local se recomienda usar contenedores con Docker Compose (`docker compose up --build`). El frontend se sirve estáticamente (Nginx) y el backend expone documentación en `/docs`.
+Nota operativa: Para desarrollo local se recomienda usar contenedores con Docker Compose (`docker compose up --build`). El frontend se sirve estáticamente (Nginx) y el backend expone documentación en `/docs`. Para entornos simples o limitados, se dispone de un stack Dockerfile unificado (`docker-compose.stack.yml`) que combina frontend y backend en una sola imagen con s6-overlay gestionando nginx y uvicorn.
 
 ### **Componentes:**
 

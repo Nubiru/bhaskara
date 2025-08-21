@@ -1,421 +1,201 @@
-# 🚀 MutualMetrics Frontend
+# 🚀 MutualMetrics - Mathematical & Business Analytics Platform
 
-**Plataforma Web de Análisis Matemático y Business Analytics**
+**Version:** 1.0.0  
+**Last Updated:** 2025-08-20  
+**Status:** ✅ Production Ready - Full Stack Containerized
 
-Una aplicación React SPA moderna para análisis matemático de funciones cuadráticas y business analytics, con navegación modular, internacionalización completa y visualización interactiva.
+## 🎯 Overview
 
-## 📋 Características
+MutualMetrics is a high-performance web application for mathematical and business analytics, featuring:
+- **Quadratic Function Analysis** (Bhaskara's formula)
+- **Business Analytics** (Revenue, Costs, Profit, Break-even)
+- **Financial Tools** (Compound Interest, Currency Converter)
+- **Number System Converter** (Hex, Octal, Decimal, Binary)
+- **Modern UI/UX** with light/dark themes and internationalization
 
-### 🔬 Análisis Matemático
-- ✅ **Análisis Cuadrático Completo**: Raíces, vértice, discriminante, óptimos económicos
-- ✅ **Visualización Interactiva**: Gráficos de parábolas con Chart.js
-- ✅ **Validación en Tiempo Real**: Feedback inmediato con React Hook Form + Zod
+## 🏗️ Architecture
 
-### 📈 Business Analytics Suite
-- ✅ **Análisis de Ingresos**: Cálculo de revenue total con proyecciones
-- ✅ **Análisis de Costos**: Breakdown de costos fijos y variables
-- ✅ **Análisis de Beneficios**: Cálculo de profit margins y rentabilidad
-- ✅ **Punto de Equilibrio**: Break-even analysis con sensibilidad
+- **Frontend**: React 19 + TypeScript + Tailwind CSS v4 + React Router v7
+- **Backend**: FastAPI + Python 3.12 + Uvicorn
+- **Deployment**: Single container with Nginx + Supervisord
+- **Development**: Local dev servers + Containerized production
 
-### 🌐 Experiencia de Usuario
-- ✅ **Navegación Intuitiva**: Sidebar modular con acceso rápido
-- ✅ **Internacionalización**: Soporte completo ES/EN
-- ✅ **Sistema de Temas**: Light/Dark mode adaptativos
-- ✅ **Responsive Design**: Optimizado para todos los dispositivos
-- ✅ **Accesibilidad**: Cumple estándares WCAG 2.1 AA
+## 🚀 Quick Start
 
-### 🔧 Funcionalidades Técnicas
-- ✅ **Historial Local**: Persistencia de análisis previos con localStorage
-- ✅ **Integración Backend**: API completa con FastAPI endpoints
-- ✅ **Manejo de Errores**: Retry logic y user-friendly messages
-- ✅ **Performance**: Optimizado para carga rápida (< 200ms)
-- ✅ **Type Safety**: TypeScript strict mode con Zod validation
-
-## 🛠️ Stack Tecnológico
-
-### Frontend Core
-- **Framework**: React Router v7 (SPA mode)
-- **Lenguaje**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4 (plugin oficial `@tailwindcss/vite`)
-- **State Management**: React Hooks + Context API
-
-### Librerías Especializadas
-- **Gráficos**: Chart.js + react-chartjs-2
-- **Formularios**: React Hook Form + Zod
-- **API**: Axios con retry logic y interceptors
-- **i18n**: react-i18next con detección automática
-- **Themes**: Sistema custom con preferencias del sistema
-
-### Calidad y Testing
-- **Testing**: Jest + React Testing Library
-- **Linting**: ESLint + Prettier + Husky
-- **Accessibility**: jest-axe para testing a11y
-- **Performance**: Lighthouse CI integrado
-
-## ⚙️ Configuración clave
-
-- `frontend/vite.config.ts`: plugins principales
-  - `@tailwindcss/vite` (Tailwind v4)
-  - `@react-router/dev/vite` (React Router v7, modo SPA)
-  - `vite-tsconfig-paths` (paths TS)
-- `frontend/react-router.config.ts`: configuración específica de React Router
-- `frontend/tsconfig.json` y `frontend/tsconfig.test.json`: TypeScript y testing
-- `frontend/jest.config.cjs`: configuración de Jest
-- `frontend/vite.config.ts`: build y dev server via Vite
-- `tailwind.config.js`: (opcional) requerido solo si se personaliza Tailwind más allá del plugin
-
-## 🚀 Instalación
-
-### Prerrequisitos
-- Node.js >= 18.0.0
-- npm >= 9.0.0
-
-### Configuración
+### Option 1: Containerized Deployment (Recommended)
 
 ```bash
-# 1. Clonar repositorio
-git clone https://github.com/mutualmetrics/bhaskara.git
-cd bhaskara/frontend
+# Build and run the full stack
+docker compose -f docker-compose.stack.yml up --build
 
-# 2. Instalar dependencias
+# Access the application
+Frontend: http://localhost
+Backend API: http://localhost:8000
+API Docs: http://localhost:8000/docs
+```
+
+### Option 2: Local Development
+
+```bash
+# Frontend (React dev server)
+cd frontend
 npm install
-
-# 3. Configurar variables de entorno
-# Ver guía en docs/env.md y crea un archivo .env.local con las variables
-
-# 4. Iniciar desarrollo
 npm run dev
+# Access: http://localhost:5173
+
+# Backend (Python with virtual environment)
+cd backend
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# Linux/Mac:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# Access: http://localhost:8000
 ```
 
-### Variables de Entorno
+## 📁 Project Structure
 
+```
+bhaskara/
+├── frontend/                 # React frontend application
+│   ├── app/                 # Main application code
+│   ├── components/          # Reusable UI components
+│   ├── routes/              # React Router routes
+│   ├── styles/              # CSS and theme files
+│   └── package.json         # Frontend dependencies
+├── backend/                  # FastAPI backend
+│   ├── routers/             # API route handlers
+│   ├── services/            # Business logic services
+│   ├── main.py              # FastAPI application entry
+│   └── requirements.txt     # Python dependencies
+├── Dockerfile.stack          # Single container deployment
+├── docker-compose.stack.yml  # Stack deployment configuration
+└── docs/                     # Development documentation
+```
+
+## 🔧 Development Commands
+
+### Frontend
 ```bash
-# API Configuration
-VITE_API_BASE_URL=http://localhost:8000
-VITE_API_TIMEOUT=30000
-
-# Feature Flags
-VITE_ENABLE_ANALYTICS=true
-VITE_ENABLE_DOWNLOADS=true
-VITE_DEBUG_MODE=false
-
-# Optional: Analytics & Monitoring
-VITE_GA_TRACKING_ID=GA_MEASUREMENT_ID
-VITE_SENTRY_DSN=SENTRY_DSN
+cd frontend
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run typecheck    # TypeScript type checking
+npm run test         # Run tests
 ```
 
-## 📁 Arquitectura del Proyecto
-
-```
-frontend/
-├── app/                          # React Router v7 app directory
-│   ├── root.tsx                  # Layout principal con providers
-│   ├── routes.ts                 # Configuración de rutas anidadas
-│   ├── app.css                   # Estilos globales + Tailwind v4
-│   │
-│   ├── routes/                   # Definición de rutas
-│   │   ├── home.tsx             # Página principal (legacy)
-│   │   ├── history.tsx          # Historial de análisis
-│   │   ├── about.tsx            # Información del proyecto
-│   │   └── analysis/            # Business Analytics Routes
-│   │       ├── bhaskara.tsx     # Análisis cuadrático
-│   │       ├── revenue.tsx      # Análisis de ingresos
-│   │       ├── costs.tsx        # Análisis de costos
-│   │       ├── profit.tsx       # Análisis de beneficios
-│   │       └── break-even.tsx   # Punto de equilibrio
-│   │
-│   ├── components/               # Componentes modulares
-│   │   ├── navigation/          # Sidebar y navegación
-│   │   ├── providers/           # Theme + Language providers
-│   │   ├── ui/                  # Loading, toggles, buttons
-│   │   ├── forms/               # BhaskaraForm y validaciones
-│   │   ├── charts/              # BhaskaraChart y visualización
-│   │   ├── history/             # HistoryList y gestión
-│   │   └── layout/              # Header, Footer globales
-│   │
-│   ├── hooks/                    # Custom hooks
-│   │   ├── useLocalHistory.ts   # Gestión de historial
-│   │   └── useTheme.ts          # Gestión de temas
-│   │
-│   ├── services/                 # Capa de servicios
-│   │   └── api.ts               # API service con todos los endpoints
-│   │
-│   ├── types/                    # Tipos TypeScript
-│   │   ├── quadratic.ts         # Análisis cuadrático
-│   │   ├── business.ts          # Business analytics
-│   │   └── api.ts               # Requests y responses
-│   │
-│   ├── utils/                    # Utilidades
-│   │   └── api-helpers.ts       # Retry logic, error handling
-│   │
-│   ├── constants/                # Constantes
-│   │   └── api.ts               # Endpoints y configuración
-│   │
-│   └── i18n/                     # Internacionalización
-│       ├── config.ts            # Configuración react-i18next
-│       └── translations/        # Traducciones modulares
-│           ├── es/              # Español - estructura modular
-│           │   ├── index.ts     # Agregador principal ES
-│           │   ├── navigation.ts # Navegación y accesibilidad
-│           │   ├── home.ts      # Página principal
-│           │   ├── form.ts      # Formularios (compartido)
-│           │   ├── history.ts   # Página historial
-│           │   ├── about.ts     # Página acerca de
-│           │   ├── sidebar.ts   # Navegación lateral
-│           │   ├── footer.ts    # Componente footer
-│           │   ├── common.ts    # Estados comunes
-│           │   ├── analysis.ts  # Módulos de análisis
-│           │   └── revenue.ts   # Módulo de ingresos
-│           └── en/              # English - misma estructura
-│               ├── index.ts     # Agregador principal EN
-│               ├── navigation.ts
-│               ├── home.ts
-│               ├── form.ts
-│               ├── history.ts
-│               ├── about.ts
-│               ├── sidebar.ts
-│               ├── footer.ts
-│               ├── common.ts
-│               ├── analysis.ts
-│               └── revenue.ts
-│
-├── public/                       # Assets estáticos
-├── react-router.config.ts        # Configuración SPA + optimizaciones
-├── tsconfig.json                 # TypeScript config estricto
-├── tailwind.config.js            # (opcional) Tailwind v4 + custom themes
-└── vite.config.ts                # Vite optimizado para performance
-```
-
-## 🎯 Módulos de Análisis
-
-### 1. 📐 Análisis Cuadrático (Bhaskara)
-- **Entrada**: Coeficientes a, b, c
-- **Salida**: Raíces, vértice, discriminante, ecuación
-- **Visualización**: Gráfica de parábola interactiva
-- **Casos**: Educación, modelado matemático
-
-### 2. 💰 Análisis de Ingresos
-- **Entrada**: Precio unitario, cantidad
-- **Salida**: Ingreso total, proyecciones
-- **Aplicación**: Planning de ventas, pricing strategy
-
-### 3. 💸 Análisis de Costos
-- **Entrada**: Costos fijos, costos variables
-- **Salida**: Costo total, breakdown detallado
-- **Aplicación**: Control de costos, presupuestos
-
-### 4. 📊 Análisis de Beneficios
-- **Entrada**: Ingresos, costos totales
-- **Salida**: Beneficio neto, márgenes
-- **Aplicación**: Análisis de rentabilidad
-
-### 5. ⚖️ Punto de Equilibrio
-- **Entrada**: Costos fijos, precio, costo variable unitario
-- **Salida**: Punto de equilibrio, análisis de sensibilidad
-- **Aplicación**: Planning estratégico, viabilidad
-
-## 🧪 Testing y Calidad
-
-### Testing Suite
+### Backend
 ```bash
-# Tests unitarios
-npm test
-
-# Tests con coverage
-npm run test:coverage
-
-# Tests de accesibilidad
-npm run test:a11y
-
-# Tests E2E (futuro)
-npm run test:e2e
+cd backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000  # Development server
+pytest               # Run tests (when implemented)
 ```
 
-### Métricas de Calidad
-- **Cobertura de Tests**: ≥ 85%
-- **TypeScript Strict**: 100% type-safe
-- **Lighthouse Score**: ≥ 90
-- **Accesibilidad**: WCAG 2.1 AA compliance
-- **Bundle Size**: < 1MB compressed
-
-## 🔧 Scripts de Desarrollo
-
-| Comando | Función |
-|---------|---------|
-| `npm run dev` | Servidor de desarrollo con HMR |
-| `npm run build` | Build optimizado para producción |
-| `npm run preview` | Preview del build de producción |
-| `npm run lint` | ESLint + Prettier verificación |
-| `npm run lint:fix` | Auto-fix de problemas de linting |
-| `npm run type-check` | Verificación completa TypeScript |
-| `npm run test` | Suite completa de tests |
-| `npm run test:coverage` | Tests con reporte de cobertura |
-
-## 📊 Performance Targets
-
-### Core Web Vitals
-- **First Contentful Paint**: < 1.5s
-- **Largest Contentful Paint**: < 2.5s
-- **Cumulative Layout Shift**: < 0.1
-- **First Input Delay**: < 100ms
-- **Time to Interactive**: < 3s
-
-### Bundle Optimization
-- **Initial Bundle**: < 500KB gzipped
-- **Chart.js**: Lazy loaded por módulo
-- **i18n Resources**: Carga bajo demanda
-- **Code Splitting**: Por rutas y componentes pesados
-
-## 🔒 Seguridad y Privacidad
-
-### Medidas de Seguridad
-- **Input Sanitization**: Todos los inputs validados con Zod
-- **XSS Protection**: DOMPurify para contenido dinámico
-- **CSRF Protection**: Tokens en requests sensibles
-- **CSP Headers**: Content Security Policy configurado
-
-### Privacidad de Datos
-- **Local Storage**: Solo análisis y preferencias de UI
-- **No Tracking**: Sin cookies de terceros por defecto
-- **GDPR Ready**: Cumplimiento con regulaciones europeas
-- **Data Export**: Usuario controla sus datos completamente
-
-## ♿ Accesibilidad
-
-### Implementación WCAG 2.1 AA
-- **Keyboard Navigation**: Navegación completa por teclado
-- **Screen Readers**: Labels y descriptions semánticas
-- **Color Contrast**: Ratio ≥ 4.5:1 en todos los elementos
-- **Focus Management**: Indicadores visuales claros
-- **Alternative Text**: Para gráficas y elementos visuales
-
-### Testing Automático
-- **jest-axe**: Verificación automática en CI/CD
-- **Manual Testing**: Con herramientas de screen readers
-- **User Testing**: Con usuarios con discapacidades
-
-## 🌍 Internacionalización
-
-### Idiomas Soportados
-- **🇪🇸 Español**: Idioma principal, traducción nativa
-- **🇺🇸 English**: Traducción completa, contexto técnico
-
-### Características i18n
-- **Toggle Dinámico**: Cambio de idioma sin recarga
-- **Persistencia**: Preferencia guardada en localStorage
-- **Arquitectura Modular**: Traducciones organizadas por dominio
-- **Pluralization**: Manejo automático de plurales
-- **Number Formatting**: Formato de números por región
-- **Escalabilidad**: Estructura preparada para múltiples idiomas
-
-### Arquitectura Modular de Traducciones
-```typescript
-// Estructura escalable por dominio
-translations/
-├── es/                    # Idioma español
-│   ├── index.ts          # Agregador principal
-│   ├── navigation.ts     # Nav + accesibilidad
-│   ├── home.ts          # Página principal
-│   ├── form.ts          # Formularios compartidos
-│   ├── sidebar.ts       # Navegación lateral
-│   └── revenue.ts       # Módulo específico
-└── en/                   # English (misma estructura)
-    └── ...
-
-// Beneficios:
-✅ Separación por responsabilidad
-✅ Desarrollo paralelo sin conflictos
-✅ Escalabilidad para nuevos módulos
-✅ Tree-shaking optimizado
-✅ Mantenimiento simplificado
-```
-
-## 🚀 Deployment
-
-### Ambientes
+### Docker
 ```bash
-# Desarrollo
-npm run dev
+# Build and run stack
+docker compose -f docker-compose.stack.yml up --build
 
-# Staging
-npm run build:staging
+# Stop stack
+docker compose -f docker-compose.stack.yml down
 
-# Producción
-npm run build:prod
+# View logs
+docker compose -f docker-compose.stack.yml logs -f
 ```
 
-### Ejecutar con Docker (recomendado)
-```bash
-# Construir e iniciar todo (frontend + backend)
-docker compose up --build
+## 🌐 API Endpoints
 
-# Accesos
-# Frontend: http://localhost:5173
-# Backend:  http://localhost:8000 (docs en /docs)
-```
-Notas:
-- El frontend en contenedor se sirve estáticamente con Nginx.
-- El frontend consume la API en `http://backend:8000` dentro de la red de Compose.
+### Health Check
+- `GET /health` - Service health status
 
-### Optimizaciones de Build
-- **Tree Shaking**: Eliminación de código no usado
-- **Minification**: Compresión optimizada
-- **Asset Optimization**: Imágenes y recursos optimizados
-- **Caching Strategy**: Headers de cache configurados
+### Mathematical Analysis
+- `POST /analizar/bhaskara` - Quadratic function analysis
+- `POST /analizar/ingreso-total` - Revenue analysis
+- `POST /analizar/costo-total` - Cost analysis
+- `POST /analizar/punto-equilibrio` - Break-even analysis
 
-## 🤝 Contribución
+### Downloads
+- `GET /descargar/{analysis_type}/{filename}` - Download analysis results
 
-### Workflow de Desarrollo
-1. **Fork** del repositorio
-2. **Feature Branch**: `git checkout -b feature/nueva-funcionalidad`
-3. **Desarrollo**: Siguiendo [codigo_optimizado.md](codigo_optimizado.md)
-4. **Testing**: Verificar que todos los tests pasen
-5. **Pull Request**: Con descripción detallada
+## 🎨 UI Features
 
-### Estándares de Calidad
-- **Código**: Seguir guías de [codigo_optimizado.md](codigo_optimizado.md)
-- **Tests**: Mantener cobertura ≥ 85%
-- **Documentation**: Documentar componentes
-- **i18n**: Agregar traducciones para strings
-- **A11y**: Verificar accesibilidad en funcionalidades
+- **Responsive Design** - Mobile-first approach
+- **Theme System** - Light/Dark mode with CSS variables
+- **Internationalization** - English/Spanish support
+- **Accessibility** - WCAG 2.1 AA compliance
+- **Interactive Charts** - Chart.js integration
+- **Form Validation** - React Hook Form + Zod
 
-## 📄 Licencia
+## 🔒 Security & Performance
 
-Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
+- **CORS Configuration** - Configurable allowed origins
+- **Input Validation** - Pydantic models for API validation
+- **Error Handling** - Comprehensive error responses
+- **Health Checks** - Container health monitoring
+- **Process Management** - Supervisord for service orchestration
 
-## 📚 Documentación adicional
+## 📚 Documentation
 
-- API Spec (OpenAPI): `docs/openapi.yaml`
-- Convenciones API: `docs/api-conventions.md`
-- Entornos/ENV: `docs/env.md`
-- Deployment & Runbook: `docs/deployment-and-runbook.md`
-- Seguridad & Privacidad: `docs/security-and-privacy.md`
-- Observabilidad: `docs/observability.md`
-- Testing Strategy: `docs/testing-strategy.md`
-- Design Tokens/Temas: `docs/design-tokens.md`
-- ADRs: `docs/adr/`
- - Reinicio backend (venv): ver `README_backend.md` (no duplicamos comandos aquí)
+- [Model Specification](Model_Specification.md) - System architecture and API specs
+- [Executive Plan](Plan_Ejecutivo_MutualMetrics.md) - Development roadmap
+- [Docker Setup](docs/docker-setup.md) - Containerization guide
+- [Deployment Guide](docs/deployment-and-runbook.md) - Production deployment
+- [Landing Page Architecture](docs/landing-page-architecture.md) - Component structure and layout system
 
-## 🗣️ Política de idioma de documentación
+## 🐛 Troubleshooting
 
-Para mantener consistencia, la documentación del repositorio usará **Español** como idioma principal. Cuando existan recursos bilingües (ES/EN) se indicará explícitamente. Las cadenas de UI continúan con soporte ES/EN vía i18n.
+### Common Issues
 
-## 📞 Contacto y Soporte
+1. **Port Conflicts**
+   - Frontend: Ensure port 5173 is available
+   - Backend: Ensure port 8000 is available
+   - Container: Ensure ports 80 and 8000 are available
 
-- **Email**: contact@mutualmetrics.com
-- **GitHub Issues**: Para bugs y feature requests
-- **Documentación**: `https://docs.mutualmetrics.com`
-- **Especificación**: Ver [Model Specification.md](Model%20Specification.md)
+2. **Docker Build Issues**
+   - Clear Docker cache: `docker system prune -a`
+   - Rebuild without cache: `docker compose -f docker-compose.stack.yml up --build --no-cache`
 
-## 🙏 Agradecimientos
+3. **Frontend Build Issues**
+   - Clear node modules: `rm -rf node_modules package-lock.json && npm install`
+   - Clear React Router cache: `rm -rf .react-router`
 
-- [React Router v7](https://reactrouter.com/) - Framework de routing moderno
-- [Tailwind CSS v4](https://tailwindcss.com/) - Sistema de diseño utility-first
-- [Chart.js](https://www.chartjs.org/) - Visualización de datos interactiva
-- [react-i18next](https://react.i18next.com/) - Internacionalización React
+4. **Backend Connection Issues**
+   - Check CORS configuration in `backend/config.py`
+   - Verify API base URL in frontend environment
+
+### Development vs Production
+
+- **Development**: Use local dev servers for faster iteration
+- **Production**: Use containerized stack for deployment
+- **Testing**: Containerized stack provides production-like environment
+
+## 🤝 Contributing
+
+1. Follow the [Code of Conduct](CODE_OF_CONDUCT.md)
+2. Read [Contributing Guidelines](CONTRIBUTING.md)
+3. Follow [Code Standards](code-standard.md)
+4. Update documentation for any changes
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔄 Version History
+
+- **1.0.0** (2025-08-20) - Production ready with full stack containerization
+- **0.9.0** - UI/UX revamp and theme system
+- **0.8.0** - React Router v7 migration and refactoring
+- **0.7.0** - Business analytics tools implementation
+- **0.6.0** - Docker containerization and deployment
+- **0.5.0** - FastAPI backend implementation
+- **0.4.0** - React frontend foundation
+- **0.3.0** - Project architecture and planning
+- **0.2.0** - Initial project setup
+- **0.1.0** - Project conception and requirements
 
 ---
 
-**💡 MutualMetrics v1.0 - Análisis matemático y business analytics en una plataforma moderna**
-
-**Desarrollado con ❤️ por el equipo MutualMetrics**
+**Built with ❤️ by the MutualMetrics Team**

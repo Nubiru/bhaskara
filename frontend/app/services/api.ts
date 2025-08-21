@@ -68,6 +68,8 @@ import type {
   ProfitAnalysisResult,
   BreakEvenAnalysisRequest,
   BreakEvenAnalysisResult,
+  CompoundInterestRequest,
+  CompoundInterestResult,
   DownloadOptions,
   DownloadProgress
 } from '../types/business';
@@ -410,6 +412,29 @@ class ApiService {
         throw error;
       }
       throw new ApiServiceError('Error durante análisis de punto de equilibrio', 500, 'BREAKEVEN_ANALYSIS_ERROR', error);
+    }
+  }
+
+  /**
+   * Análisis de Interés Compuesto
+   */
+  async analyzeCompoundInterest(request: CompoundInterestRequest): Promise<CompoundInterestResult> {
+    try {
+      const response = await this.axiosInstance.post<ApiSuccessResponse<CompoundInterestResult>>(
+        '/analisis/interes-compuesto',
+        request
+      );
+
+      if (!response.data.success) {
+        throw new ApiServiceError('Backend returned unsuccessful response', 500, 'BACKEND_ERROR');
+      }
+
+      return response.data.data;
+    } catch (error) {
+      if (error instanceof ApiServiceError || error instanceof NetworkServiceError) {
+        throw error;
+      }
+      throw new ApiServiceError('Error durante análisis de interés compuesto', 500, 'COMPOUND_INTEREST_ANALYSIS_ERROR', error);
     }
   }
 

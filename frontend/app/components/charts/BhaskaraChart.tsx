@@ -144,12 +144,12 @@ const CHART_COLORS = {
  */
 const KEY_POINTS = {
   roots: {
-    color: CHART_COLORS.roots,
+    color: CHART_COLORS.roots(),
     label: 'Raíces',
     size: 8,
   },
   vertex: {
-    color: CHART_COLORS.vertex,
+    color: CHART_COLORS.vertex(),
     label: 'Vértice',
     size: 10,
   },

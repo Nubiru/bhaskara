@@ -22,6 +22,7 @@ const costs = {
   // Form
   'costs.form.title': 'Cost Data',
   'costs.form.subtitle': 'Enter fixed and variable costs to perform the analysis',
+  'costs.form.description': 'Breakdown of fixed and variable costs for business optimization',
   'costs.form.costosFijosLabel': 'Fixed Costs',
   'costs.form.costosFijosPlaceholder': 'Ex: 5000',
   'costs.form.costosFijosDescription': 'Costs that do not vary with production level (rent, base salaries, insurance)',

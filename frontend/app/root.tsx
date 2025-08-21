@@ -1,9 +1,9 @@
 /**
  * @fileoverview Componente root principal de MutualMetrics SPA
- * @version 1.0.1
+ * @version 1.0.2
  * @author MutualMetrics Team
- * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @since 2025-08-21
+ * @lastModified 2025-08-21
  * 
  * @description
  * Componente root que define la estructura HTML base de la aplicación SPA.
@@ -23,7 +23,7 @@
  * ✅ Funcional - Layout completo implementado con Header y Footer
  * 
  * @bugs
- * - Ninguno conocido
+ * - ✅ FIXED: Layout height issues - Implementado flexbox correcto
  * 
  * @todo
  * - [PRIORITY: LOW] Agregar meta tags dinámicos por ruta
@@ -96,33 +96,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Herramienta web gratuita para análisis de funciones cuadráticas. Calcula raíces, vértices, óptimos económicos y visualiza parábolas interactivamente." />
         <meta name="keywords" content="análisis cuadrático, funciones matemáticas, parábolas, raíces, vértice, matemáticas, educación" />
-        <meta name="author" content="MutualMetrics Team" />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mutualmetrics.com/" />
-        <meta property="og:title" content="MutualMetrics - Análisis de Funciones Cuadráticas" />
-        <meta property="og:description" content="Herramienta web gratuita para análisis de funciones cuadráticas" />
-        <meta property="og:image" content="/og-image.png" />
-
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://mutualmetrics.com/" />
-        <meta property="twitter:title" content="MutualMetrics - Análisis de Funciones Cuadráticas" />
-        <meta property="twitter:description" content="Herramienta web gratuita para análisis de funciones cuadráticas" />
-        <meta property="twitter:image" content="/og-image.png" />
-
-		{/* Favicon/brand icon */}
-		<link rel="icon" type="image/png" sizes="any" href="/favicon.png" />
-		<link rel="shortcut icon" href="/favicon.png" />
-		<link rel="apple-touch-icon" href="/favicon.png" />
+        <meta name="author" content="Mariano Capella & Gabriel Osemberg" />
         
         {/* Security Headers - Note: X-Frame-Options should be set by server, removed from meta */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         
-        <title>MutualMetrics - Análisis de Funciones Cuadráticas</title>
+        <title>MutualMetrics</title>
         <Meta />
         <Links />
       </head>
@@ -133,12 +114,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <LanguageProvider>
           <ThemeProvider>
-            <div id="root" className="min-h-screen flex flex-col">
+            <div id="root" className="h-full flex flex-col overflow-hidden">
               {/* Header de navegación */}
               <Header />
               
-              {/* Contenido principal */}
-              <main className="flex-1">
+              {/* Contenido principal - toma el espacio restante, sin overlap */}
+              <main className="flex-1 min-h-0 overflow-hidden">
                 {children}
               </main>
               

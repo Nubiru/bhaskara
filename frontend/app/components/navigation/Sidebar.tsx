@@ -1,284 +1,218 @@
 /**
- * @fileoverview Componente de navegación lateral para módulos de análisis
- * @version 1.0.0
+ * @fileoverview Sidebar de navegación para herramientas de MutualMetrics
+ * @version 1.1.0
  * @author MutualMetrics Team
- * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @since 2025-08-21
+ * @lastModified 2025-08-21
  * 
  * @description
- * Sidebar de navegación que permite al usuario cambiar entre diferentes
- * módulos de análisis: Bhaskara, Revenue, Costs, Profit, Break-even.
- * Incluye iconografía, estados activos, y accesibilidad completa.
+ * Componente de sidebar fijo (200px) que proporciona navegación entre diferentes
+ * herramientas de análisis. Incluye tooltips en hover y estados visuales activos.
  * 
  * @dependencies
- * - React Router para navegación
- * - react-i18next para internacionalización
- * - Tailwind CSS para estilos
+ * - Tipos de herramientas
+ * - Configuración de herramientas
+ * - Sistema de temas unificado
  * 
  * @usage
- * <Sidebar isOpen={sidebarOpen} onToggle={setSidebarOpen} />
+ * <Sidebar 
+ *   currentView={currentView} 
+ *   onViewChange={handleViewChange}
+ *   toolsConfig={toolsConfig}
+ * />
  * 
  * @state
- * ✅ Funcional - Navegación lateral implementada
+ * ✅ Funcional - Sidebar completo con navegación y tooltips
  * 
  * @bugs
- * - Ninguno conocido
+ * - ✅ FIXED: Footer overlap - Implementado height: 100% y flexbox correcto
  * 
  * @todo
- * - [PRIORITY: MEDIUM] Agregar animaciones de transición
- * - [PRIORITY: LOW] Implementar drag-to-resize functionality
- * - [PRIORITY: LOW] Agregar shortcuts de teclado para navegación
+ * - [PRIORITY: LOW] Agregar animaciones de transición
+ * - [PRIORITY: LOW] Implementar agrupación por categorías
+ * - [PRIORITY: LOW] Agregar búsqueda de herramientas
  * 
  * @performance
- * - Componente memoizado para evitar re-renders innecesarios
- * - Iconos optimizados con SVG inline
- * - Lazy loading de rutas pesadas
+ * - Componente memoizado para evitar re-renders
+ * - Tooltips renderizados solo en hover
+ * - Navegación optimizada
  * 
  * @accessibility
- * - ARIA navigation landmarks
- * - Keyboard navigation support
- * - Screen reader optimized
- * - Focus management
+ * - Navegación por teclado completa
+ * - ARIA labels y descriptions
+ * - Tooltips accesibles
+ * - Contraste optimizado
  */
 
 import { memo, useCallback } from 'react';
-import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import type { ToolConfig, ViewType } from '../../types/tools';
 
-/**
- * Props del componente Sidebar
- */
+// ========================================
+// PROPS INTERFACE
+// ========================================
+
 interface SidebarProps {
-  isOpen?: boolean;
-  onToggle?: (isOpen: boolean) => void;
+  /** Vista actualmente seleccionada */
+  currentView: ViewType;
+  /** Función para cambiar la vista */
+  onViewChange: (view: ViewType) => void;
+  /** Configuración de herramientas disponibles */
+  toolsConfig: readonly ToolConfig[];
+  /** Clases CSS adicionales */
   className?: string;
 }
 
-/**
- * Definición de item de navegación
- */
-interface NavigationItem {
-  id: string;
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description: string;
-  current: boolean;
-  badge?: string;
-}
+// ========================================
+// COMPONENT IMPLEMENTATION
+// ========================================
 
 /**
- * Iconos SVG para cada módulo de análisis
+ * Sidebar de navegación para herramientas
  */
-const BhaskaraIcon = ({ className = '' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01m3 0h.01M9 11h.01m3 0h.01m3 0h.01" />
-  </svg>
-);
-
-const RevenueIcon = ({ className = '' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-const CostIcon = ({ className = '' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-  </svg>
-);
-
-const ProfitIcon = ({ className = '' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-  </svg>
-);
-
-const BreakEvenIcon = ({ className = '' }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-  </svg>
-);
-
-/**
- * Componente principal Sidebar
- */
-export const Sidebar = memo<SidebarProps>(({ 
-  isOpen = true, 
-  onToggle,
+const Sidebar = memo<SidebarProps>(({ 
+  currentView, 
+  onViewChange, 
+  toolsConfig, 
   className = '' 
 }) => {
-  const location = useLocation();
   const { t } = useTranslation();
 
   /**
-   * Configuración de navegación con traducciones
+   * Handler para cambio de vista
    */
-  const navigation: NavigationItem[] = [
-    {
-      id: 'bhaskara',
-      name: t('sidebar.bhaskara', 'Bhaskara'),
-      href: '/',
-      icon: BhaskaraIcon,
-      description: t('sidebar.bhaskaraDesc', 'Análisis de ecuaciones cuadráticas'),
-      current: location.pathname === '/',
-      badge: t('sidebar.implemented', 'Implementado')
-    },
-    {
-      id: 'revenue',
-      name: t('sidebar.revenue', 'Ingresos'),
-      href: '/analysis/revenue',
-      icon: RevenueIcon,
-      description: t('sidebar.revenueDesc', 'Cálculo de ingresos totales'),
-      current: location.pathname === '/analysis/revenue'
-    },
-    {
-      id: 'costs',
-      name: t('sidebar.costs', 'Costos'),
-      href: '/analysis/costs',
-      icon: CostIcon,
-      description: t('sidebar.costsDesc', 'Análisis de costos fijos y variables'),
-      current: location.pathname === '/analysis/costs'
-    },
-    {
-      id: 'profit',
-      name: t('sidebar.profit', 'Beneficio'),
-      href: '/analysis/profit',
-      icon: ProfitIcon,
-      description: t('sidebar.profitDesc', 'Cálculo de beneficios netos'),
-      current: location.pathname === '/analysis/profit'
-    },
-    {
-      id: 'breakeven',
-      name: t('sidebar.breakeven', 'Punto de Equilibrio'),
-      href: '/analysis/break-even',
-      icon: BreakEvenIcon,
-      description: t('sidebar.breakevenDesc', 'Análisis de punto de equilibrio'),
-      current: location.pathname === '/analysis/break-even'
-    }
-  ];
+  const handleToolClick = useCallback((toolId: ViewType) => {
+    onViewChange(toolId);
+  }, [onViewChange]);
 
   /**
-   * Maneja el toggle del sidebar
+   * Renderizar herramienta individual
    */
-  const handleToggle = useCallback(() => {
-    onToggle?.(!isOpen);
-  }, [isOpen, onToggle]);
+  const renderTool = useCallback((tool: ToolConfig) => {
+    const isActive = currentView === tool.id;
+    const isImplemented = tool.isImplemented;
 
-  /**
-   * Maneja eventos de teclado para accesibilidad
-   */
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      onToggle?.(false);
-    }
-  }, [onToggle]);
-
-  return (
-    <aside
-      className={`
-        fixed inset-y-0 left-0 z-50 flex-shrink-0 
-        transition-all duration-300 ease-in-out
-        ${isOpen ? 'w-64' : 'w-16'}
-        ${className}
-      `}
-      aria-label={t('sidebar.navigationLabel', 'Navegación de análisis')}
-      onKeyDown={handleKeyDown}
-      style={{ background: 'var(--color-surface)', borderRight: '1px solid var(--color-divider)' }}
-    >
-      {/* Header del Sidebar */}
-      <div className="flex h-16 items-center justify-between px-4" style={{ borderBottom: '1px solid var(--color-divider)' }}>
-        {isOpen && (
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {t('sidebar.title', 'Análisis')}
-          </h2>
-        )}
-        
-        {/* Toggle Button */}
-        <button
-          type="button"
-          onClick={handleToggle}
-          className="
-            p-2 rounded-md
-            focus:outline-none focus:ring-2
-            transition-colors duration-200
-          "
-          style={{ color: 'var(--color-text-secondary)' }}
-          aria-label={isOpen ? t('sidebar.collapse', 'Colapsar sidebar') : t('sidebar.expand', 'Expandir sidebar')}
-        >
-          <svg 
-            className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth={1.5} 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Navigation Menu */}
-      <nav className="flex-1 space-y-1 px-2 py-4" aria-label={t('sidebar.mainNavigation', 'Navegación principal')}>
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          
-          return (
-            <Link
-              key={item.id}
-              to={item.href}
-              className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 relative ${!isOpen && 'justify-center'} hover:underline hover:underline-offset-4`}
-              aria-current={item.current ? 'page' : undefined}
-              title={!isOpen ? item.name : undefined}
-              style={{
-                color: item.current ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-                background: item.current ? 'transparent' : 'transparent',
-                borderRight: item.current ? '2px solid var(--color-primary)' : '2px solid transparent'
-              }}
-            >
-              {/* Icon */}
-              <Icon
-                className={`flex-shrink-0 ${!isOpen ? 'h-6 w-6' : 'h-5 w-5'}`}
-                style={{ color: item.current ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}
-                aria-hidden="true"
-              />
-              
-              {/* Label y Description */}
-              {isOpen && (
-                <div className="ml-3 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="truncate">{item.name}</span>
-                    {item.badge && (
-                      <span className="
-                        ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
-                        bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300
-                      ">
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs truncate mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-                    {item.description}
-                  </p>
-                </div>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Footer del Sidebar */}
-      {isOpen && (
-        <div className="p-4" style={{ borderTop: '1px solid var(--color-divider)' }}>
-          <div className="text-xs text-center" style={{ color: 'var(--color-text-secondary)' }}>
-            <p>{t('sidebar.version', 'MutualMetrics v2.0')}</p>
-            <p>{t('sidebar.businessAnalytics', 'Business Analytics Suite')}</p>
+    return (
+      <button
+        key={tool.id}
+        onClick={() => handleToolClick(tool.id)}
+        className={`w-full text-left p-3 rounded-lg transition-all duration-300 hover:shadow-lg group relative ${
+          isActive 
+            ? 'bg-blue-100 dark:bg-blue-900/30 border-r-2 border-blue-500' 
+            : 'hover:bg-gray-100 dark:hover:bg-gray-800/50'
+        } ${className}`}
+        style={{
+          backgroundColor: isActive 
+            ? 'var(--color-primary)' 
+            : 'transparent',
+          borderRight: isActive 
+            ? '2px solid var(--color-primary)' 
+            : 'none',
+          color: isActive 
+            ? 'var(--on-primary-text)' 
+            : 'var(--color-text)'
+        }}
+        aria-label={`${tool.label} - ${tool.description}`}
+        aria-pressed={isActive}
+      >
+        {/* Icono de la herramienta */}
+        <div className="flex items-center space-x-3">
+          <span className="text-xl">{tool.icon}</span>
+          <div className="flex-1 text-left">
+            <div className="font-medium text-sm">{tool.label}</div>
+            {tool.category && (
+              <div 
+                className="text-xs opacity-70"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                {tool.category}
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Indicador de implementación */}
+        {!isImplemented && (
+          <div className="absolute top-2 right-2">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
+              🚧
+            </span>
+          </div>
+        )}
+
+        {/* Tooltip en hover */}
+        <div 
+          className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+          style={{
+            backgroundColor: 'var(--color-surface-elevated)',
+            color: 'var(--color-text)',
+            border: '1px solid var(--color-divider)'
+          }}
+        >
+          {tool.description}
+          <div 
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+            style={{
+              backgroundColor: 'var(--color-surface-elevated)',
+              borderLeft: '1px solid var(--color-divider)',
+              borderBottom: '1px solid var(--color-divider)'
+            }}
+          />
+        </div>
+      </button>
+    );
+  }, [currentView, onViewChange, className]);
+
+  return (
+    <aside 
+      className="h-full flex flex-col overflow-hidden"
+      style={{ 
+        backgroundColor: 'var(--color-surface-elevated)',
+        borderRight: '1px solid var(--color-divider)',
+        width: '200px'
+      }}
+      role="navigation"
+      aria-label="Navegación de herramientas"
+    >
+      {/* Header del sidebar */}
+      <div className="p-4 border-b flex-shrink-0" style={{ borderColor: 'var(--color-divider)' }}>
+        <h2 
+          className="text-lg font-semibold"
+          style={{ color: 'var(--color-text)' }}
+        >
+          {t('home.sidebar.title', 'Herramientas')}
+        </h2>
+        <p 
+          className="text-sm mt-1"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          {t('home.sidebar.subtitle', 'Selecciona una herramienta para comenzar')}
+        </p>
+      </div>
+
+      {/* Lista de herramientas - scrollable si es necesario */}
+      <nav className="flex-1 overflow-y-auto p-2 space-y-1 min-h-0">
+        {toolsConfig.map(renderTool)}
+      </nav>
+
+      {/* Footer del sidebar - fijo en la parte inferior */}
+      <div className="p-4 border-t flex-shrink-0" style={{ borderColor: 'var(--color-divider)' }}>
+        <div className="text-center">
+          <div 
+            className="text-xs"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            {t('home.sidebar.footer', 'MutualMetrics v2.0 - Suite de Análisis Profesional')}
+          </div>
+        </div>
+      </div>
     </aside>
   );
 });
+
+// ========================================
+// DISPLAY NAME
+// ========================================
 
 Sidebar.displayName = 'Sidebar';
 

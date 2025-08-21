@@ -27,6 +27,7 @@ const profit = {
   // Formulario
   'profit.form.title': 'Datos de Rentabilidad',
   'profit.form.subtitle': 'Introduce los ingresos y costos totales para calcular el beneficio',
+  'profit.form.description': 'Calcula y analiza la rentabilidad empresarial comparando ingresos totales con costos totales',
   'profit.form.ingresoTotalLabel': 'Ingreso Total',
   'profit.form.ingresoTotalPlaceholder': 'Ej: 15000',
   'profit.form.ingresoTotalDescription': 'Ingresos totales obtenidos por ventas, servicios o actividades comerciales',

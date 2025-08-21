@@ -8,6 +8,14 @@
 export const analysis = {
   title: 'Análisis de Negocio',
   subtitle: 'Herramientas avanzadas de análisis empresarial',
+  results: {
+    title: 'Resultados del Análisis'
+  },
+  states: {
+    analyzing: 'Analizando...',
+    processing: 'Procesando datos, por favor espera...',
+    error: 'Error en el Análisis'
+  },
   bhaskara: {
     title: 'Análisis Bhaskara'
   },

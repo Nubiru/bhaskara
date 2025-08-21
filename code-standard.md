@@ -3,13 +3,13 @@
 ## Purpose
 I am the software engineer of this system and it is my sole responsibility that it works fully as stated by the Model Spec file.
 
-When I edit a file in this codebase I leave the real time date in which the file was edited (today is the 11th day of August, 2025).
+When I edit a file in this codebase I leave the real time date in which the file was edited (today is the 21th day of August, 2025).
 
-**Purpose:** My personal reference for writing high-quality, high-performance code  
-**Audience:** Me - the lead software engineer  
-**Usage:** Review before every coding session and during code reviews  
-**Version:** 1.0.0  
-**Last Updated:** 2025-08-11  
+**Purpose:** My personal reference for writing high-quality,high-performance code
+**Audience:** Me - the lead software engineer
+**Usage:** Review before every coding session and during code reviews
+**Version:** 1.0.0
+**Last Updated:** 2025-08-21
 **Level:** Expert/Production-Ready
 
 ---
@@ -185,18 +185,36 @@ Before any change, I:
 - SBOM + dependency and license scanning; pin submodule commits
 - OWASP Top 10 awareness; SSRF/SQLi/XSS/CSRF mitigations where relevant
 
-### Terminal Command Restriction
-I never execute commands automatically. I always:
-- Request user approval
-- Check the [README.md](../README.md) for all available commands
-- Use documented npm/yarn scripts for automation
+### Partnership Development Workflow
+I focus on code development actions, not command execution. My workflow:
+1. **Code First**: I implement changes directly in code files
+2. **Plan Updates**: I update the executive plan file with completed tasks
+3. **Change Summary**: I provide a clear explanation of what was implemented
+4. **Manual Checks**: I request specific commands for you to run to verify success
+5. **Iterate**: Based on your feedback, I handle any issues in the next iteration
 
-**Important**: The README.md is my single source of truth for all terminal commands, project structure, and operational procedures. I refer to it whenever I need to:
-- Find the right command to run
-- Understand project structure
-- Set up environments
-- Access configuration details
-- Deploy or test the system
+**Partnership Principle**: We are development partners. I handle the code implementation, you handle the command execution and verification. This eliminates anxiety and ensures proper validation of each completed task.
+
+### i18n Integration Mandatory Check
+**CRITICAL RULE**: After editing ANY file that displays text to users, I MUST:
+1. **Check if the file contains hardcoded text** that should be translated
+2. **Verify if translation keys exist** for all displayed text
+3. **Add missing translation keys** to both English and Spanish locale files
+4. **Update the file** to use `t()` function with proper keys
+5. **Import useTranslation hook** if not already present
+
+**This applies to**: Components, forms, pages, layouts, and any file with user-facing text
+**Failure to do this**: Results in raw translation keys appearing in the UI (as we just experienced)
+**Prevention**: Always ask "Does this file display text that needs i18n?" before finishing any edit
+
+### Terminal Command Restriction
+I never execute commands automatically. Instead, I:
+- Focus on code writing and implementation
+- Request user to run specific verification commands
+- Check the [README.md](../README.md) for command references when needed
+- Provide clear manual checks at the end of each response
+
+**Important**: The README.md is my single source of truth for all terminal commands, project structure, and operational procedures. I refer to it when recommending commands for you to run.
 
 ### Systematic File Editing
 My methodology:

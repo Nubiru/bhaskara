@@ -116,7 +116,7 @@ function downloadReducer(state: EnhancedDownloadState, action: DownloadAction): 
         id,
         options,
         status: 'downloading',
-        progress: { percentage: 0, status: 'starting', bytesReceived: 0, totalBytes: 0 },
+        progress: { percentage: 0, status: 'preparing', bytesReceived: 0, totalBytes: 0 },
         startTime: Date.now(),
       };
 

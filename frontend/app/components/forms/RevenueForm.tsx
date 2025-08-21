@@ -1,14 +1,14 @@
 /**
  * @fileoverview Componente de formulario para análisis de ingresos totales
- * @version 1.0.0
+ * @version 2.0.0
  * @author MutualMetrics Team
- * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @since 2025-08-13
+ * @lastModified 2025-08-13
  * 
  * @description
- * Formulario especializado para análisis de ingresos: captura precio unitario y cantidad
- * para calcular ingresos totales. Incluye validación en tiempo real con Zod,
- * manejo de estados de carga y error, y accesibilidad completa.
+ * Formulario compacto para análisis de ingresos con sistema de temas unificado.
+ * Captura precio unitario y cantidad para calcular ingresos totales con validación
+ * en tiempo real, manejo de estados y accesibilidad completa.
  * 
  * @dependencies
  * - React Hook Form para manejo de formularios
@@ -16,18 +16,20 @@
  * - Tipos de business.ts para análisis de ingresos
  * - LoadingSpinner para estados de carga
  * - react-i18next para internacionalización
+ * - Sistema de temas unificado con tokens CSS
  * 
  * @usage
  * <RevenueForm onSubmit={handleAnalysis} isLoading={false} />
  * 
  * @state
- * ✅ Funcional - Formulario completo con validación e i18n
+ * 🔄 EN DESARROLLO - Actualización a tokens de tema y diseño compacto
  * 
  * @bugs
  * - Ninguno conocido
  * 
  * @todo
- * - [PRIORITY: LOW] Agregar campos opcionales para descuentos
+ * - [PRIORITY: HIGH] Implementar sistema de temas unificado
+ * - [PRIORITY: MEDIUM] Agregar campos opcionales para descuentos
  * - [PRIORITY: LOW] Implementar simulación en tiempo real
  * - [PRIORITY: LOW] Agregar ejemplos predefinidos
  * 
@@ -301,10 +303,11 @@ const RevenueForm = memo<RevenueFormProps>(({
       <div key={field.name} className="space-y-2">
         <label 
           htmlFor={fieldName}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium"
+          style={{ color: 'var(--color-text)' }}
         >
           {t(`revenue.form.${field.name}Label`)}
-          {field.required && <span className="text-red-500 ml-1">*</span>}
+          {field.required && <span style={{ color: 'var(--color-error)' }} className="ml-1">*</span>}
         </label>
         
         <Controller
@@ -324,16 +327,20 @@ const RevenueForm = memo<RevenueFormProps>(({
                 }}
                 placeholder={t(`revenue.form.${field.name}Placeholder`)}
                 disabled={disabled || isLoading}
-                className={`
-                  block w-full px-3 py-2 border rounded-md shadow-sm
-                  focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-                  disabled:bg-gray-100 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-white
-                  ${hasError 
-                    ? 'border-red-300 text-red-900 placeholder-red-300' 
-                    : 'border-gray-300 text-gray-900 placeholder-gray-400 dark:border-gray-600'
-                  }
-                  ${isTouched && !hasError ? 'border-green-300' : ''}
-                `}
+                className="
+                  block w-full px-3 py-2 border rounded-lg shadow-sm
+                  focus:outline-none focus:ring-2 focus:ring-offset-2
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  transition-all duration-200
+                "
+                style={{
+                  background: 'var(--color-surface-elevated)',
+                  borderColor: hasError ? 'var(--color-error)' : 'var(--color-divider)',
+                  color: 'var(--color-text)',
+                  boxShadow: hasError ? '0 0 0 1px var(--color-error)' : 'none',
+                  '--tw-ring-color': 'var(--focus-ring)',
+                  '--tw-ring-offset-color': 'var(--color-background)'
+                } as React.CSSProperties}
                 min={field.constraints.min}
                 max={field.constraints.max}
                 step={field.constraints.step}
@@ -344,7 +351,7 @@ const RevenueForm = memo<RevenueFormProps>(({
               
               {/* Unit display */}
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <span className="text-gray-500 text-sm">{t(`revenue.form.${field.name}Unit`)}</span>
+                <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t(`revenue.form.${field.name}Unit`)}</span>
               </div>
             </div>
           )}
@@ -353,7 +360,8 @@ const RevenueForm = memo<RevenueFormProps>(({
         {/* Descripción del campo */}
         <p 
           id={`${fieldName}-description`}
-          className="text-sm text-gray-500 dark:text-gray-400"
+          className="text-sm"
+          style={{ color: 'var(--color-text-secondary)' }}
         >
           {t(`revenue.form.${field.name}Description`)}
         </p>
@@ -361,14 +369,25 @@ const RevenueForm = memo<RevenueFormProps>(({
         {/* Ejemplos */}
         {field.examples && (
           <div className="flex flex-wrap gap-1">
-            <span className="text-xs text-gray-400">{t('form.examples')}:</span>
+            <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{t('form.examples')}:</span>
             {field.examples.map((example, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleFieldChange(field.name, parseFloat(example))}
                 disabled={disabled || isLoading}
-                className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-600 disabled:opacity-50 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
+                className="text-xs px-2 py-1 rounded transition-all duration-200 disabled:opacity-50"
+                style={{
+                  background: 'var(--color-surface-elevated)',
+                  color: 'var(--color-text-secondary)',
+                  border: '1px solid var(--color-divider)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--color-divider)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--color-surface-elevated)';
+                }}
               >
                 {example}
               </button>
@@ -380,7 +399,8 @@ const RevenueForm = memo<RevenueFormProps>(({
         {hasError && errorMessage && (
           <p 
             id={`${fieldName}-error`}
-            className="text-sm text-red-600"
+            className="text-sm"
+            style={{ color: 'var(--color-error)' }}
             role="alert"
             aria-live="polite"
           >
@@ -399,7 +419,8 @@ const RevenueForm = memo<RevenueFormProps>(({
       <div className="space-y-2">
         <label 
           htmlFor="description"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium"
+          style={{ color: 'var(--color-text)' }}
         >
           {t('form.description')}
         </label>
@@ -428,7 +449,7 @@ const RevenueForm = memo<RevenueFormProps>(({
           )}
         />
         
-        <p id="description-help" className="text-sm text-gray-500 dark:text-gray-400">
+        <p id="description-help" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
           {t('form.maxCharacters', { max: 500 })}
         </p>
       </div>
@@ -518,15 +539,16 @@ const RevenueForm = memo<RevenueFormProps>(({
 
       {/* Indicadores de estado */}
       {isDirty && (
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {isValid ? `✅ ${t('form.formValid')}` : `❌ ${t('form.formWithErrors')}`}
+        <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+          {isValid ? t('form.formValid') : t('form.formWithErrors')}
         </div>
       )}
     </form>
   );
 });
 
-// Configuración del display name para debugging
-RevenueForm.displayName = 'RevenueForm';
+// ============================================================================
+// EXPORTACIÓN
+// ============================================================================
 
 export default RevenueForm;

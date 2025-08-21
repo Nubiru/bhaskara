@@ -38,6 +38,9 @@ import revenue from './revenue';
 import costs from './costs';
 import profit from './profit';
 import breakeven from './breakeven';
+import compoundInterest from './compoundInterest';
+import currencyConverter from './currencyConverter';
+import numberConverter from './numberConverter';
 import { download } from './download';
 
 // Export complete English translations
@@ -68,6 +71,9 @@ export const enTranslations = {
   costs,
   profit,
   breakeven,
+  compoundInterest,
+  currencyConverter,
+  numberConverter,
   
   // Download system
   download,

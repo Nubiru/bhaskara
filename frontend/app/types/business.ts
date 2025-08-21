@@ -207,6 +207,141 @@ export interface BreakEvenAnalysisResult {
 }
 
 // ========================================
+// COMPOUND INTEREST TYPES
+// ========================================
+
+/**
+ * Schema para validación de análisis de interés compuesto
+ */
+export const compoundInterestRequestSchema = z.object({
+  principal: z.number()
+    .min(0, 'El capital inicial debe ser mayor o igual a 0')
+    .refine(val => !isNaN(val) && isFinite(val), 'El capital inicial debe ser un número válido'),
+  tasaAnual: z.number()
+    .min(0, 'La tasa anual debe ser mayor o igual a 0')
+    .max(1, 'La tasa anual debe ser menor o igual a 1 (100%)')
+    .refine(val => !isNaN(val) && isFinite(val), 'La tasa anual debe ser un número válido'),
+  frecuenciaAnual: z.number()
+    .int('La frecuencia anual debe ser un número entero')
+    .min(1, 'La frecuencia anual debe ser mayor a 0')
+    .refine(val => [1, 2, 4, 12, 365].includes(val), 'La frecuencia debe ser 1, 2, 4, 12 o 365'),
+  años: z.number()
+    .min(0.01, 'Los años deben ser mayor a 0')
+    .refine(val => !isNaN(val) && isFinite(val), 'Los años deben ser un número válido'),
+  contribuciones: z.number()
+    .min(0, 'Las contribuciones deben ser mayor o igual a 0')
+    .optional(),
+  frecuenciaContribucion: z.enum(['mensual', 'anual']).optional(),
+  description: z.string().optional()
+});
+
+export type CompoundInterestRequest = z.infer<typeof compoundInterestRequestSchema>;
+
+/**
+ * Entrada individual del schedule de crecimiento
+ */
+export interface CompoundInterestScheduleEntry {
+  año: number;
+  monto: number;
+  contribuciones: number;
+  interes: number;
+}
+
+/**
+ * Desglose detallado del cálculo
+ */
+export interface CompoundInterestBreakdown {
+  montoPrincipal: number;
+  montoContribuciones: number;
+  periodosTotales: number;
+  tasaPeriodo: number;
+}
+
+/**
+ * Resultado del análisis de interés compuesto
+ */
+export interface CompoundInterestResult {
+  montoFinal: number;
+  capitalInicial: number;
+  totalContribuciones: number;
+  interesGanado: number;
+  tasaAnual: number;
+  frecuenciaAnual: number;
+  años: number;
+  contribuciones: number;
+  frecuenciaContribucion: string;
+  schedule: CompoundInterestScheduleEntry[];
+  desglose: CompoundInterestBreakdown;
+}
+
+// ========================================
+// CURRENCY CONVERTER TYPES
+// ========================================
+
+/**
+ * Schema para validación de conversión de divisas
+ */
+export const currencyConversionRequestSchema = z.object({
+  amount: z.number()
+    .min(0, 'El monto debe ser mayor o igual a 0')
+    .refine(val => !isNaN(val) && isFinite(val), 'El monto debe ser un número válido'),
+  fromCurrency: z.string()
+    .min(3, 'Debe seleccionar una moneda de origen')
+    .max(3, 'Código de moneda inválido'),
+  toCurrency: z.string()
+    .min(3, 'Debe seleccionar una moneda de destino')
+    .max(3, 'Código de moneda inválido'),
+  description: z.string().optional()
+});
+
+export type CurrencyConversionRequest = z.infer<typeof currencyConversionRequestSchema>;
+
+/**
+ * Resultado de la conversión de divisas
+ */
+export interface CurrencyConversionResult {
+  amount: number;
+  fromCurrency: string;
+  toCurrency: string;
+  conversion: {
+    rate: number;
+    convertedAmount: number;
+    lastUpdated: string;
+    source: string;
+  };
+  metadata: {
+    timestamp: string;
+    analysisId: string;
+  };
+}
+
+/**
+ * Monedas disponibles para conversión
+ */
+export const AVAILABLE_CURRENCIES = [
+  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
+  { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
+  { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: '🇯🇵' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: '🇨🇦' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', flag: '🇨🇭' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: '🇨🇳' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', flag: '🇧🇷' },
+  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽' },
+  { code: 'KRW', name: 'South Korean Won', symbol: '₩', flag: '🇰🇷' },
+  { code: 'RUB', name: 'Russian Ruble', symbol: '₽', flag: '🇷🇺' },
+  { code: 'ZAR', name: 'South African Rand', symbol: 'R', flag: '🇿🇦' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', flag: '🇸🇪' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', flag: '🇳🇴' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr', flag: '🇩🇰' },
+  { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
+  { code: 'CZK', name: 'Czech Koruna', symbol: 'Kč', flag: '🇨🇿' },
+  { code: 'HUF', name: 'Hungarian Forint', symbol: 'Ft', flag: '🇭🇺' }
+] as const;
+
+// ========================================
 // UNIFIED TYPES
 // ========================================
 
@@ -365,3 +500,9 @@ export const isProfitAnalysis = (result: BusinessAnalysisResult): result is Prof
 export const isBreakEvenAnalysis = (result: BusinessAnalysisResult): result is BreakEvenAnalysisResult => {
   return 'puntoEquilibrio' in result && 'margenContribucion' in result;
 };
+
+// ========================================
+// EXPORT ALL TYPES
+// ========================================
+
+// All types are exported inline above

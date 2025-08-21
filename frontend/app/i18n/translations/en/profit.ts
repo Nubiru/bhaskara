@@ -26,6 +26,7 @@ const profit = {
   // Form
   'profit.form.title': 'Profitability Data',
   'profit.form.subtitle': 'Enter total revenue and costs to calculate profit',
+  'profit.form.description': 'Calculate and analyze business profitability by comparing total revenue with total costs',
   'profit.form.ingresoTotalLabel': 'Total Revenue',
   'profit.form.ingresoTotalPlaceholder': 'Ex: 15000',
   'profit.form.ingresoTotalDescription': 'Total income from sales, services, or commercial activities',

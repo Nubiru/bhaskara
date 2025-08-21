@@ -145,7 +145,7 @@ const CHART_COLORS = {
  */
 const KEY_POINTS = {
   current: {
-    color: CHART_COLORS.point,
+    color: CHART_COLORS.point(),
     label: 'Current Point',
     size: 10,
   },

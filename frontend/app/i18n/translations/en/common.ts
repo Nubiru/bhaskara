@@ -20,5 +20,8 @@ export const common = {
   current: 'Current',
   switchTo: 'Switch to',
   currentLanguage: 'Current language',
-  clickToSwitch: 'Click to switch to'
+  clickToSwitch: 'Click to switch to',
+  inDevelopment: 'In Development',
+  toolComingSoon: 'The tool',
+  willBeAvailableSoon: 'will be available soon.'
 } as const;

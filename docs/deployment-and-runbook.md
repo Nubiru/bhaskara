@@ -2,13 +2,15 @@
 
 ## Entornos
 - Desarrollo local: `npm run dev` (frontend), `uvicorn main:app --reload` (backend)
-- Contenedores (recomendado): `docker compose up --build`
+- Contenedores separados (recomendado): `docker compose up --build`
+- Stack unificado (POC/demo): `docker compose -f docker-compose.stack.yml up --build`
 - Producción: imágenes Docker y orquestación (compose/K8s)
 
 ## Build
 - Frontend: `npm ci && npm run build`
 - Backend: `pip install -r requirements.txt`
-- Contenedores: `docker compose build`
+- Contenedores separados: `docker compose build`
+- Stack unificado: `docker build -f Dockerfile.stack -t mutualmetrics:stack .`
 
 ## Variables
 - Ver docs/env.md
@@ -51,3 +53,24 @@ Alternativa rápida (desarrollo): ejecutar localmente `npm run dev` apuntando a 
 
 ### Activos estáticos obsoletos
 - Si Nginx sigue sirviendo el bundle anterior: `docker compose build --no-cache frontend && docker compose up -d frontend` y limpiar caché del navegador.
+
+## Stack Unificado (Dockerfile.stack)
+
+### Uso
+```bash
+# Construir e iniciar
+docker compose -f docker-compose.stack.yml up --build
+
+# Solo construir
+docker build -f Dockerfile.stack -t mutualmetrics:stack .
+```
+
+### Ventajas
+- Una sola imagen para frontend y backend
+- Ideal para POCs, demos y entornos limitados
+- s6-overlay gestiona nginx y uvicorn simultáneamente
+
+### Consideraciones
+- Frontend accede al backend via `/api/*` (proxy Nginx)
+- Variables de entorno: `VITE_API_BASE_URL=http://localhost/api`
+- Health check en puerto 8000 (backend directo)

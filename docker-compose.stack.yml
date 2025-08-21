@@ -1,0 +1,40 @@
+# Docker Compose for MutualMetrics Stack (Frontend + Backend in one image)
+# Single container deployment for simplicity and performance
+# @version 1.0.0
+# @author Software Engineer
+# @since 2025-08-20
+# @lastModified 2025-08-20
+
+services:
+  mutualmetrics-stack:
+    build:
+      context: .
+      dockerfile: Dockerfile.stack
+    container_name: mutualmetrics-stack
+    ports:
+      - "80:80"      # Frontend (Nginx)
+      - "8000:8000"  # Backend (Uvicorn direct)
+    environment:
+      - PYTHONPATH=/app/backend
+      - VITE_API_BASE_URL=http://localhost/api
+      - APP_NAME=MutualMetrics Stack
+      - APP_VERSION=1.0.0
+    volumes:
+      # For development: mount source code (read-only)
+      - ./backend:/app/backend:ro
+      - ./frontend:/app/frontend:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mutualmetrics-stack
+
+# Network configuration
+networks:
+  mutualmetrics-stack:
+    name: mutualmetrics-stack
+    driver: bridge

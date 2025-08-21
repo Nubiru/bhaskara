@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @fileoverview Router principal de API pública (análisis y negocio).
-@version 1.0.0
-@since 2025-08-12
-@lastModified 2025-08-12
+@version 1.1.0
+@since 2025-08-21
+@lastModified 2025-08-21
 
 Responsabilidad
 - Exponer endpoints consumidos por el frontend (Bhaskara y Business Analytics)
@@ -20,6 +20,7 @@ from services.business_service import (
     calcular_costo_total,
     calcular_beneficio,
     calcular_punto_equilibrio,
+    calcular_interes_compuesto,
 )
 
 router = APIRouter()
@@ -33,6 +34,16 @@ def ok(data):
 class BhaskaraBody(BaseModel):
     coefficients: dict
     mode: Optional[str] = "full"
+    description: Optional[str] = None
+
+
+class CompoundInterestBody(BaseModel):
+    principal: float
+    tasa_anual: float
+    frecuencia_anual: int
+    años: float
+    contribuciones: Optional[float] = None
+    frecuencia_contribucion: Optional[str] = None
     description: Optional[str] = None
 
 
@@ -73,5 +84,37 @@ def analisis_punto_equilibrio(
     description: Optional[str] = None,
 ):
     return ok(calcular_punto_equilibrio(costos_fijos, precio, costo_variable_unitario))
+
+
+@router.post("/analisis/interes-compuesto")
+def analisis_interes_compuesto(body: CompoundInterestBody):
+    """
+    Calcula el interés compuesto con o sin contribuciones regulares.
+    
+    Args:
+        principal: Capital inicial (>= 0)
+        tasa_anual: Tasa de interés anual como decimal (0.05 = 5%)
+        frecuencia_anual: Veces por año que se capitaliza (1, 2, 4, 12, 365)
+        años: Tiempo de inversión en años (> 0)
+        contribuciones: Contribución regular por período (>= 0, opcional)
+        frecuencia_contribucion: 'mensual' o 'anual' (opcional)
+    
+    Returns:
+        Resultado del cálculo con desglose completo
+    """
+    try:
+        resultado = calcular_interes_compuesto(
+            principal=body.principal,
+            tasa_anual=body.tasa_anual,
+            frecuencia_anual=body.frecuencia_anual,
+            años=body.años,
+            contribuciones=body.contribuciones,
+            frecuencia_contribucion=body.frecuencia_contribucion
+        )
+        return ok(resultado)
+    except ValueError as e:
+        return {"success": False, "data": None, "error": str(e)}
+    except Exception as e:
+        return {"success": False, "data": None, "error": f"Error interno: {str(e)}"}
 
 

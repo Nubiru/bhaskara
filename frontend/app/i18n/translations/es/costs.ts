@@ -23,6 +23,7 @@ const costs = {
   // Formulario
   'costs.form.title': 'Datos de Costos',
   'costs.form.subtitle': 'Introduce los costos fijos y variables para realizar el análisis',
+  'costs.form.description': 'Desglose de costos fijos y variables para optimización empresarial',
   'costs.form.costosFijosLabel': 'Costos Fijos',
   'costs.form.costosFijosPlaceholder': 'Ej: 5000',
   'costs.form.costosFijosDescription': 'Costos que no varían con el nivel de producción (alquiler, salarios base, seguros)',

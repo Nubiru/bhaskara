@@ -44,6 +44,14 @@ const revenue = {
   'revenue.results.quantity': 'Quantity',
   'revenue.results.perUnit': 'Per Unit',
   'revenue.results.total': 'Total',
+  'revenue.results.formula': 'Formula',
+  'revenue.results.calculation': 'Calculation',
+  'revenue.results.analysisId': 'Analysis ID',
+  'revenue.results.summaryText': 'The analysis shows that with a price of',
+  'revenue.results.perUnit': 'per unit',
+  'revenue.results.andQuantity': 'and a quantity of',
+  'revenue.results.units': 'units',
+  'revenue.results.totalRevenueIs': 'the total revenue is',
 
   // States
   'revenue.states.noResults': 'Enter price and quantity data to see revenue analysis',

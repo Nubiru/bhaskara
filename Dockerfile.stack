@@ -1,0 +1,85 @@
+# Simple Stack Dockerfile - Frontend + Backend in one container
+# Uses supervisord for process management (much simpler than s6-overlay)
+# @version 1.0.0
+# @author Software Engineer
+# @since 2025-08-20
+# @lastModified 2025-08-20
+
+# Stage 1: Frontend Build
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# Stage 2: Runtime with both frontend and backend
+FROM python:3.12-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY backend/requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copy backend code
+COPY backend/ /app/backend/
+
+# Copy frontend build
+COPY --from=frontend-builder /app/build/client /usr/share/nginx/html
+
+# Configure nginx (simple inline config)
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    echo 'server { \
+    listen 80; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { try_files $uri $uri/ /index.html; } \
+    location /api/ { \
+        proxy_pass http://127.0.0.1:8000/; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+    } \
+}' > /etc/nginx/sites-available/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+# Configure supervisord with proper log paths
+RUN echo '[supervisord] \n\
+nodaemon=true \n\
+logfile=/var/log/supervisord.log \n\
+logfile_maxbytes=50MB \n\
+logfile_backups=10 \n\
+loglevel=info \n\
+pidfile=/var/run/supervisord.pid \n\
+[program:nginx] \n\
+command=nginx -g "daemon off;" \n\
+autostart=true \n\
+autorestart=true \n\
+stdout_logfile=/var/log/nginx.log \n\
+stderr_logfile=/var/log/nginx-error.log \n\
+[program:backend] \n\
+command=uvicorn main:app --host 127.0.0.1 --port 8000 \n\
+directory=/app/backend \n\
+autostart=true \n\
+autorestart=true \n\
+stdout_logfile=/var/log/backend.log \n\
+stderr_logfile=/var/log/backend-error.log' > /etc/supervisor/conf.d/supervisord.conf
+
+# Create log directories with proper permissions
+RUN mkdir -p /var/log && \
+    touch /var/log/supervisord.log /var/log/nginx.log /var/log/nginx-error.log /var/log/backend.log /var/log/backend-error.log && \
+    chmod 755 /var/log && \
+    chmod 644 /var/log/*.log
+
+WORKDIR /app/backend
+EXPOSE 80 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -20,5 +20,8 @@ export const common = {
   current: 'Actual',
   switchTo: 'Cambiar a',
   currentLanguage: 'Idioma actual',
-  clickToSwitch: 'Haz clic para cambiar a'
+  clickToSwitch: 'Haz clic para cambiar a',
+  inDevelopment: 'En Desarrollo',
+  toolComingSoon: 'La herramienta',
+  willBeAvailableSoon: 'estará disponible próximamente.'
 } as const;

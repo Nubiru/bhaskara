@@ -23,7 +23,7 @@
  * - Estructura optimizada para mantenimiento
  */
 
-// Importar módulos de traducción
+// Import translation modules
 import { navigation } from './navigation';
 import { home } from './home';
 import { form } from './form';
@@ -38,6 +38,9 @@ import revenue from './revenue';
 import costs from './costs';
 import profit from './profit';
 import breakeven from './breakeven';
+import compoundInterest from './compoundInterest';
+import currencyConverter from './currencyConverter';
+import numberConverter from './numberConverter';
 import { download } from './download';
 
 // Exportar traducciones completas en español
@@ -68,6 +71,9 @@ export const esTranslations = {
   costs,
   profit,
   breakeven,
+  compoundInterest,
+  currencyConverter,
+  numberConverter,
   
   // Sistema de descarga
   download,

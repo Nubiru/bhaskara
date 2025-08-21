@@ -1,76 +1,73 @@
 /**
- * @fileoverview Página principal de análisis cuadrático
- * @version 1.0.1
+ * @fileoverview Página principal de MutualMetrics - Landing con análisis oculto
+ * @version 2.2.0
  * @author MutualMetrics Team
- * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @since 2025-08-21
+ * @lastModified 2025-08-21
  * 
  * @description
- * Página principal que contiene el formulario de análisis cuadrático
- * y la visualización de resultados. Punto de entrada principal de la aplicación.
- * Implementa patrones de diseño responsivo y accesibilidad completa.
+ * Página principal que funciona como landing page con presentación de MutualMetrics.
+ * Incluye sidebar izquierdo (200px) que revela herramientas de análisis al hacer clic.
+ * Implementa sistema de contenido dinámico sin navegación de página.
  * 
  * @dependencies
  * - React Router v7.7.1
  * - Tailwind CSS v4.1.4
- * - Componentes de formulario (pendiente)
- * - Componentes de gráficos (pendiente)
+ * - Componentes de análisis existentes
+ * - Sistema de temas y i18n
+ * - Hooks y componentes refactorizados
  * 
  * @usage
- * Ruta principal accesible en "/"
+ * Ruta principal accesible en "/" - Landing page con análisis oculto
  * 
  * @state
- * ✅ FUNCIONAL - Integración completa con backend, formulario, resultados, gráfica e historial
+ * ✅ FUNCIONAL - Refactorización completa con componentes separados
  * 
  * @bugs
- * - Ninguno conocido
+ * - ✅ FIXED: Sidebar overlap con footer - Implementado layout flexbox correcto
  * 
  * @todo
- * - [PRIORITY: LOW] Agregar animaciones de transición
- * - [PRIORITY: LOW] Implementar análisis económico como opción alternativa
- * - [PRIORITY: LOW] Agregar progress indicators durante análisis
+ * - [PRIORITY: LOW] Agregar animaciones de transición suaves
+ * - [PRIORITY: LOW] Implementar lazy loading de herramientas
+ * - [PRIORITY: LOW] Agregar persistencia de vista seleccionada
  * 
  * @performance
- * - Lazy loading de componentes pesados (pendiente)
- * - Memoización de cálculos (pendiente)
- * - Optimización de re-renders (pendiente)
+ * - Componentes memoizados y optimizados
+ * - Estado unificado para análisis
+ * - Lazy loading de contenido pesado
  * 
  * @accessibility
- * - Estructura semántica correcta
- * - Navegación por teclado implementada
- * - ARIA labels y roles apropiados
- * - Contraste de colores optimizado
+ * - Navegación por teclado completa
+ * - ARIA labels para cambio de contenido
+ * - Focus management entre landing y análisis
+ * - Contraste optimizado para todos los elementos
  * 
  * @security
- * - Validación de entrada (pendiente)
- * - Sanitización de datos (pendiente)
- * - Protección contra XSS (pendiente)
+ * - Validación de entrada en formularios
+ * - Sanitización de datos de análisis
+ * - Protección contra XSS en contenido dinámico
  */
 
-import { memo, useState, useCallback } from 'react';
-import InfoPopover from '../components/ui/InfoPopover';
+import { memo, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { AnalysisRequest, FullAnalysisResult } from '../types/quadratic';
-import type { AnalysisApiRequest } from '../types/api';
-import BhaskaraForm from '../components/forms/BhaskaraForm';
-import BhaskaraChart from '../components/charts/BhaskaraChart';
-import { useLocalHistory } from '../hooks/useLocalHistory';
-import { apiService } from '../services/api';
-import type { ApiServiceError, NetworkServiceError } from '../services/api';
-import { withRetry, getErrorMessage, validateAnalysisRequest } from '../utils/api-helpers';
-import { ANALYSIS_MODES } from '../constants/api';
+import type { ViewType } from '../types/tools';
+import { TOOLS_CONFIG } from '../constants/tools';
+import { useAnalysisHandlers } from '../hooks/useAnalysisHandlers';
+import Sidebar from '../components/navigation/Sidebar';
+import LandingPage from '../components/layout/LandingPage';
+import ToolContentRenderer from '../components/layout/ToolContentRenderer';
 
 /**
  * Configuración de meta tags para SEO y accesibilidad
  */
 export function meta() {
   return [
-    { title: "MutualMetrics - Quadratic Function Analysis" },
-    { name: "description", content: "Free web tool for quadratic function analysis. Calculate roots, vertices, economic optima and visualize parabolas interactively." },
-    { name: "keywords", content: "quadratic analysis, mathematical functions, parabolas, roots, vertex, mathematics, education" },
-    { name: "author", content: "MutualMetrics Team" },
-    { property: "og:title", content: "MutualMetrics - Quadratic Function Analysis" },
-    { property: "og:description", content: "Free web tool for quadratic function analysis" },
+    { title: "MutualMetrics - Análisis Matemático y Business Analytics" },
+    { name: "description", content: "Plataforma gratuita para análisis matemático de funciones cuadráticas y business analytics. Calcula raíces, vértices, óptimos económicos y visualiza parábolas interactivamente." },
+    { name: "keywords", content: "análisis matemático, funciones cuadráticas, parábolas, raíces, vértice, business analytics, matemáticas, educación" },
+    { name: "author", content: "Mariano Capella & Gabriel Osemberg" },
+    { property: "og:title", content: "MutualMetrics - Análisis Matemático y Business Analytics" },
+    { property: "og:description", content: "Plataforma gratuita para análisis matemático y business analytics" },
     { property: "og:type", content: "website" },
   ];
 }
@@ -84,173 +81,119 @@ interface HomePageProps {
 }
 
 /**
- * Página principal de análisis cuadrático
- * Contiene el formulario principal y la visualización de resultados
- * Implementa patrones de diseño responsivo y accesibilidad completa
+ * Página principal de MutualMetrics
+ * Landing page con sidebar que revela herramientas de análisis
  */
 const HomePage = memo<HomePageProps>(({ className = '' }) => {
   const { t } = useTranslation();
   
-  // Estado para manejo del análisis
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<FullAnalysisResult | null>(null);
-  const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const { addToHistory } = useLocalHistory();
+  // Estado para manejo de la vista actual
+  const [currentView, setCurrentView] = useState<ViewType>('landing');
+  
+  // Hook personalizado para manejo de análisis
+  const { handlers, analysisState } = useAnalysisHandlers();
 
   /**
-   * Handler para envío del formulario de análisis
+   * Handler para cambio de vista
    */
-  const handleAnalysisSubmit = useCallback(async (data: AnalysisRequest) => {
-    setIsAnalyzing(true);
-    setAnalysisError(null);
-    
-    try {
-      // Validación previa
-      const validationError = validateAnalysisRequest(data);
-      if (validationError) {
-        throw new Error(validationError);
-      }
+  const handleViewChange = useCallback((view: ViewType) => {
+    setCurrentView(view);
+  }, []);
 
-      console.log('Iniciando análisis:', data);
-      
-      // Construir request completo para API
-      const apiRequest: AnalysisApiRequest = {
-        ...data,
-        timestamp: new Date().toISOString(),
-        clientVersion: '1.0.0',
-        sessionId: crypto.randomUUID?.() || Math.random().toString(36)
-      };
-
-      // Llamada real al backend con retry automático
-      const result = await withRetry(
-        () => apiService.analyzeBhaskara(apiRequest),
-        { maxAttempts: 3, baseDelay: 1000 }
-      );
-      
-      console.log('Análisis completado:', result);
-      setAnalysisResult(result);
-      
-      // Guardar en historial local
-      addToHistory(data, result);
-    } catch (error) {
-      console.error('Error durante análisis:', error);
-      const userFriendlyMessage = getErrorMessage(error);
-      setAnalysisError(userFriendlyMessage);
-    } finally {
-      setIsAnalyzing(false);
+  /**
+   * Wrapper para la función de traducción que convierte tipos
+   */
+  const translateFunction = useCallback((key: string, defaultValue?: string): string => {
+    if (defaultValue) {
+      return t(key, defaultValue);
     }
-  }, [addToHistory]);
+    return t(key);
+  }, [t]);
+
+  /**
+   * Renderizar contenido según la vista actual
+   */
+  const renderContent = useMemo(() => {
+    if (currentView === 'landing') {
+      return <LandingPage />;
+    }
+    
+    return (
+      <ToolContentRenderer
+        currentView={currentView}
+        analysisState={analysisState}
+        handlers={handlers}
+        t={translateFunction}
+      />
+    );
+  }, [currentView, analysisState, handlers, translateFunction]);
+
+  /**
+   * Obtener configuración de herramientas con traducciones
+   */
+  const toolsConfig = useMemo(() => 
+    TOOLS_CONFIG.map(tool => ({
+      ...tool,
+      label: t(tool.translationKey, tool.label),
+      description: t(tool.descriptionKey, tool.description)
+    })), [t]
+  );
 
   return (
-    <div className={`min-h-screen py-6 ${className}`} style={{ backgroundColor: 'var(--color-background)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header de la página */}
-        <header className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2">
-            {/* Title removed per instruction; keep only info icon */}
-            <InfoPopover trigger="hover" title="Cómo usar esta herramienta">
-              <ol className="list-decimal list-inside space-y-1">
-                <li>Ingresa los coeficientes A, B y C</li>
-                <li>Selecciona el modo de análisis: Raíces, Vértice, Optimal o Completo</li>
-                <li>Agrega una descripción opcional (si lo deseas)</li>
-                <li>Presiona “Analizar” para ver resultados y la gráfica</li>
-              </ol>
-            </InfoPopover>
-          </div>
-        </header>
-
-        {/* Contenido principal */}
-        <main className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Panel de formulario */}
-          <section className="rounded-lg shadow-lg p-5" aria-labelledby="form-title" style={{ background: 'var(--color-surface-elevated)', border: '1px solid var(--color-divider)' }}>
-            <h2 id="form-title" className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text)' }}>
-              {t('home.formTitle')}
-            </h2>
-            <p className="mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-              {t('home.formDescription')}
-            </p>
-            
-            {/* Formulario de análisis Bhaskara */}
-            <BhaskaraForm
-              onSubmit={handleAnalysisSubmit}
-              isLoading={isAnalyzing}
-              className="space-y-6"
-            />
-          </section>
-
-          {/* Panel de resultados */}
-          <section className="rounded-lg shadow-lg p-5" aria-labelledby="results-title" style={{ background: 'var(--color-surface-elevated)', border: '1px solid var(--color-divider)' }}>
-            <h2 id="results-title" className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text)' }}>
-              {t('home.resultsTitle')}
-            </h2>
-            
-            {/* Visualización de resultados */}
-            {isAnalyzing && (
-                <div className="rounded-lg p-3 text-center" role="status" aria-live="polite" style={{ background: 'var(--color-info)', color: 'var(--on-info-text)' }}>
-                <p className="font-medium">
-                  🔄 {t('home.analyzing')}
-                </p>
-                  <p className="text-sm mt-1">
-                  {t('home.analyzingDescription')}
-                </p>
-              </div>
-            )}
-
-            {analysisError && (
-              <div className="rounded-lg p-4" role="alert" aria-live="assertive" style={{ background: 'var(--color-error)', color: 'var(--on-error-text)' }}>
-                <p className="font-medium">
-                  ❌ {t('home.analysisError')}
-                </p>
-                <p className="text-sm mt-1">
-                  {analysisError}
-                </p>
-              </div>
-            )}
-
-            {analysisResult && !isAnalyzing && (
-              <div className="space-y-4">
-                {/* Resultados numéricos */}
-                <div className="rounded-lg p-3" style={{ background: 'var(--color-success)', color: 'var(--on-success-text)' }}>
-                  <h3 className="font-medium mb-2">✅ {t('home.analysisCompleted')}</h3>
-                  <div className="space-y-2 text-sm">
-                    <p><strong>{t('home.equation')}:</strong> {analysisResult.equation}</p>
-                    <p><strong>Discriminante:</strong> {analysisResult.discriminant.toFixed(4)}</p>
-                    <p><strong>Raíces:</strong> x₁ = {analysisResult.roots.x1?.toFixed(4) || 'N/A'}, x₂ = {analysisResult.roots.x2?.toFixed(4) || 'N/A'}</p>
-                    <p><strong>Vértice:</strong> ({analysisResult.vertex.x.toFixed(4)}, {analysisResult.vertex.y.toFixed(4)})</p>
-                    <p><strong>Análisis ID:</strong> {analysisResult.analysisId}</p>
-                  </div>
-                </div>
-                
-                {/* Gráfica interactiva */}
-                <div className="rounded-lg border p-3" style={{ background: 'var(--color-surface-elevated)', borderColor: 'var(--color-divider)' }}>
-                  <h4 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>Visualización Gráfica</h4>
-                  <BhaskaraChart
-                    coefficients={analysisResult.coefficients}
-                    analysisResult={analysisResult}
-                    height={340}
-                    showKeyPoints={true}
-                    showArea={true}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            )}
-
-            {!analysisResult && !isAnalyzing && !analysisError && (
-              <div className="rounded-lg p-4 text-center" role="status" aria-live="polite" style={{ background: 'var(--color-surface)', border: '1px dashed var(--color-divider)' }}>
-                <p style={{ color: 'var(--color-text-secondary)' }}>
-                  📊 {t('home.noResults')}
-                </p>
-                <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                  {t('home.analyzeButton')}
-                </p>
-              </div>
-            )}
-          </section>
-        </main>
-
-        {/* Información adicional: movida a un popover en el header con icono */}
+    <div 
+      className={`grid grid-rows-[1fr] grid-cols-[200px_1fr] h-full theme-gradient-transition ${className}`}
+      style={{ 
+        backgroundColor: 'var(--color-background)',
+        backgroundImage: `
+          radial-gradient(circle at 25% 25%, var(--color-surface-elevated) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, var(--color-surface-elevated) 0%, transparent 50%),
+          radial-gradient(circle at 50% 100%, var(--color-surface-elevated) 0%, transparent 50%)
+        `,
+        backgroundSize: '600px 600px, 500px 500px, 400px 400px',
+        backgroundPosition: '0 0, 300px 300px, 0 100%',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Sidebar de 200px - altura completa, sin overlap con footer */}
+      <div className="h-full overflow-hidden">
+        <Sidebar
+          currentView={currentView}
+          onViewChange={handleViewChange}
+          toolsConfig={toolsConfig}
+        />
       </div>
+
+      {/* Contenido principal - toma el espacio restante, sin overlap */}
+      <main className="h-full overflow-hidden p-6">
+        <div className="max-w-7xl mx-auto h-full flex flex-col">
+          {/* Header de la página */}
+          <header className="text-center mb-8 flex-shrink-0">
+            <h1 
+              className="text-3xl font-bold mb-2"
+              style={{ color: 'var(--color-text)' }}
+            >
+              {currentView === 'landing' 
+                ? t('home.landing.title') 
+                : toolsConfig.find(t => t.id === currentView)?.label
+              }
+            </h1>
+            {currentView !== 'landing' && (
+              <p 
+                className="text-base mt-2"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                {toolsConfig.find(t => t.id === currentView)?.description}
+              </p>
+            )}
+          </header>
+
+          {/* Contenido dinámico - scrollable si es necesario, sin overlap */}
+          <div className="flex-1 min-h-0 overflow-y-auto transition-all duration-500 ease-in-out">
+            {renderContent}
+          </div>
+        </div>
+      </main>
     </div>
   );
 });

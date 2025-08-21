@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import APP_NAME, APP_VERSION, ALLOWED_ORIGINS
 from routers.health_router import router as health_router
 from routers.api_router import router as api_router
+from routers.download_router import router as download_router
 from openapi import configure_openapi
 
 
@@ -29,6 +30,7 @@ app.add_middleware(
 
 app.include_router(health_router)
 app.include_router(api_router)
+app.include_router(download_router)
 
 # Configurar OpenAPI (ruta por defecto /docs y /openapi.json habilitadas)
 configure_openapi(app)
