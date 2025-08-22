@@ -181,7 +181,7 @@ const AnalysisPanel = memo<AnalysisPanelProps>(({
 
         {/* Resultados exitosos */}
         {result && !isLoading && !error && (
-          <div className="space-y-4">
+          <div className="space-y-4 results-bounce-in">
             {resultsComponent}
           </div>
         )}

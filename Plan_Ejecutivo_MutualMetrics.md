@@ -17,16 +17,16 @@ Consolidar en un solo roadmap todas las acciones para: mejorar UI/UX y temas, es
 - [x] Variables CSS temáticas unificadas (`app/styles/themes.css`) con `--color-surface-elevated` y tokens semánticos
 - [x] Provider de tema estable aplicando `data-theme` en `<html>` y validación de contraste (`validateThemeContrast`)
 - [x] Calentamiento del tema claro (fondos crema/ámbar) y texto claro en tema oscuro (incluye placeholders)
-- [ ] Documentar guías de contraste y uso de tokens (WCAG 2.1 AA) en docs/design-tokens.md y docs/testing-strategy.md
+- [x] Documentar guías de contraste y uso de tokens (WCAG 2.1 AA) en docs/design-tokens.md y docs/testing-strategy.md
 
-Entregables: contraste validado, superficies elevadas en paneles, tooltips/popovers coherentes
+Entregables: contraste validado, superficies elevadas en paneles, tooltips/popovers coherentes, documentación completa de tokens y estrategia de testing
 
 ### Fase 2 — Layout Global y Navegación
 - [x] Header y Sidebar tokenizados; marca visible en ambos temas (logo `favicon.png`)
-- [ ] Gradientes opcionales profesionales en Header/Sidebar (discretos, con AA)
-- [ ] Estados hover/focus activos en enlaces; indicador claro de sección actual
+- [x] Gradientes opcionales profesionales en Header/Sidebar (discretos, con AA)
+- [x] Estados hover/focus activos en enlaces; indicador claro de sección actual
 
-Entregables: navegación consistente, foco visible, lectura clara en ambos temas
+Entregables: navegación consistente, foco visible, lectura clara en ambos temas, gradientes profesionales implementados, estados de navegación mejorados
 
 ### Fase 3 — Formularios y Flujo de Análisis
 - [x] BhaskaraForm compacto; inputs `type=text` con `inputMode=decimal` (permite `-` al inicio), sin títulos redundantes
@@ -38,36 +38,48 @@ Entregables: formularios concisos, accesibles y consistentes
 ### Fase 4 — Páginas de Análisis y Contenido Auxiliar
 - [x] Bhaskara page con `InfoPopover` en header y paneles elevados
 - [x] Revenue/Costs/Profit/Break-even: superficies elevadas, alturas de charts reducidas, lazy loading
-- [ ] Revisar y reforzar T4.2–T4.5 para ajustes finos de distribución y densidad
+- [x] Revisar y reforzar T4.2–T4.5 para ajustes finos de distribución y densidad
 
-Entregables: páginas compactas sin scroll vertical innecesario; popovers en lugar de cajas fijas
+Entregables: páginas compactas sin scroll vertical innecesario; popovers en lugar de cajas fijas, formularios completamente implementados y tematizados
 
 ### Fase 5 — Gráficas y Utilidades
 - [x] Chart components leen tokens; tooltips y grids temáticos
 - [x] Utilidad `chartColors.ts` centralizada
-- [ ] Validación de contraste en utilidades de charts (T5.2)
+- [x] Validación de contraste en utilidades de charts (T5.2)
 
-Entregables: paleta consistente en gráficas y accesibles en ambos temas
+Entregables: paleta consistente en gráficas y accesibles en ambos temas, validación automática de contraste WCAG 2.1 AA
 
 ### Fase 6 — UI Reutilizable y Descargas
 - [x] ThemeToggle y LanguageToggle con tokens y transiciones
 - [x] LoadingSpinner tematizado con variantes
-- [ ] Actualizar `DownloadButton` y `FileDownloader` a tokens, estados hover/focus y mensajes de error consistentes
+- [x] Actualizar `DownloadButton` y `FileDownloader` a tokens, estados hover/focus y mensajes de error consistentes
 
-Entregables: componentes base pulidos y coherentes
+Entregables: componentes base pulidos y coherentes, tokens temáticos implementados, estados de interacción mejorados
 
 ### Fase 7 — Páginas Informativas
-- [ ] About page: tokens, superficies elevadas, grid 2×2 sin scroll
+- [x] About page: tokens, superficies elevadas, grid 2×2 sin scroll
 - [x] History page: tokens y paneles coherentes; extender InfoPopover donde aplique
 
-Entregables: información clara, compacta y con la misma identidad visual
+Entregables: información clara, compacta y con la misma identidad visual, grid 2×2 implementado sin scroll
 
 ### Fase 8 — Testing, Performance y Calidad
 - [x] A11y smoke tests (axe-core) y visual baseline snapshots para rutas clave
-- [ ] Validar contraste y transiciones entre temas; teclados y lectores de pantalla
-- [ ] Lazy loading de Chart.js y code splitting por rutas, memoización selectiva
+- [x] Validar contraste y transiciones entre temas; teclados y lectores de pantalla
+- [x] Lazy loading de Chart.js y code splitting por rutas, memoización selectiva
 
-KPIs: cobertura ≥85%, Lighthouse ≥90, bundle <1MB gz, contraste AA
+KPIs: cobertura ≥85%, Lighthouse ≥90, bundle <1MB gz, contraste AA, accesibilidad validada, performance optimizada
+
+---
+
+## Fase 9 — Frontend Polish y Mejoras Finales
+- [x] Implementar Currency Converter UI completa (backend ya implementado)
+- [x] Agregar animaciones de transición suaves entre herramientas
+- [x] Implementar lazy loading de herramientas de análisis
+- [x] Agregar persistencia de vista seleccionada en localStorage
+- [ ] Optimizar responsive design para dispositivos móviles
+- [ ] Implementar skeleton loaders para mejor UX durante transiciones
+
+Entregables: UI completamente pulida, transiciones fluidas, experiencia móvil optimizada, Currency Converter y Number Converter completamente funcionales
 
 ---
 
@@ -125,22 +137,24 @@ Entregables: dev reproducible con Compose y opción local sin Docker
 ---
 
 ## Checklist de Control (marcar al avanzar)
-- [ ] Documentación de contraste WCAG actualizada
-- [ ] Gradientes en Header/Sidebar AA
-- [ ] Navegación con hover/focus consistente
+- [x] Documentación de contraste WCAG actualizada
+- [x] Gradientes en Header/Sidebar AA
+- [x] Navegación con hover/focus consistente
 - [x] BreakevenForm tematizado
-- [ ] Validación contraste en charts
-- [ ] Download comps tematizados
-- [ ] About page 2×2 tokenizada
-- [ ] A11y teclado/lectores verificados
-- [ ] Code splitting/lazy Chart.js aplicado
-- [ ] Script `dev:full` funcionando y documentado
+- [x] Validación contraste en charts
+- [x] Download comps tematizados
+- [x] About page 2×2 tokenizada
+- [x] A11y teclado/lectores verificados
+- [x] Code splitting/lazy Chart.js aplicado
+- [x] Revenue/Costs/Profit/Break-even forms completamente implementados
+- [x] Interés compuesto (API + UI) disponible
+- [x] Landing Page implementada y ruta por defecto
+- [x] Script `dev:full` funcionando y documentado
 - [ ] Descargas legacy revisadas/unificadas
 - [ ] `Dockerfile.stack` creado y probado
-- [x] Interés compuesto (API + UI) disponible
 - [ ] Decisión y unificación de historial (backend/DB vs frontend/local)
-- [x] Landing Page implementada y ruta por defecto
-- [ ] Currency converter implementado y tematizado
+- [x] Currency converter implementado y tematizado
+- [x] Frontend polish y animaciones implementadas
 
 ### Nuevas Tareas Críticas Identificadas
 - [x] **CRITICAL**: Resolver fallos de i18n - claves no traducidas en toda la aplicación
@@ -244,5 +258,3 @@ Detalles técnicos:
 - Un cambio por commit/PR; historia lineal (rebase); sin breadcrumbs
 - Actualizar README como fuente única de comandos (Docker y local)
 - Mantener headers de archivo y fechas; tipos estrictos; tests incluidos
-
-

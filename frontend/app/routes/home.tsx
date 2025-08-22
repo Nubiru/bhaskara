@@ -87,8 +87,11 @@ interface HomePageProps {
 const HomePage = memo<HomePageProps>(({ className = '' }) => {
   const { t } = useTranslation();
   
-  // Estado para manejo de la vista actual
-  const [currentView, setCurrentView] = useState<ViewType>('landing');
+  // Estado para manejo de la vista actual con persistencia en localStorage
+  const [currentView, setCurrentView] = useState<ViewType>(() => {
+    const saved = localStorage.getItem('mutualmetrics-current-view');
+    return (saved as ViewType) || 'landing';
+  });
   
   // Hook personalizado para manejo de análisis
   const { handlers, analysisState } = useAnalysisHandlers();
@@ -98,6 +101,8 @@ const HomePage = memo<HomePageProps>(({ className = '' }) => {
    */
   const handleViewChange = useCallback((view: ViewType) => {
     setCurrentView(view);
+    // Persistir en localStorage
+    localStorage.setItem('mutualmetrics-current-view', view);
   }, []);
 
   /**

@@ -1,0 +1,343 @@
+/**
+ * @fileoverview Animaciones y transiciones para MutualMetrics
+ * @version 1.0.0
+ * @author MutualMetrics Team
+ * @since 2025-08-21
+ * @lastModified 2025-08-21
+ * 
+ * @description
+ * Sistema de animaciones y transiciones para mejorar la experiencia de usuario.
+ * Incluye transiciones suaves entre herramientas, efectos hover, y animaciones de carga.
+ * 
+ * @dependencies
+ * - CSS variables de temas
+ * - Tailwind CSS v4
+ * 
+ * @usage
+ * Importar en app.css para aplicar globalmente
+ * 
+ * @state
+ * ✅ FUNCIONAL - Sistema de animaciones completo
+ * 
+ * @performance
+ * - Usa transform y opacity para animaciones GPU-accelerated
+ * - Transiciones optimizadas con cubic-bezier
+ * - Animaciones reducidas para usuarios que prefieren menos movimiento
+ */
+
+/* ========================================
+   TRANSICIONES GLOBALES
+   ======================================== */
+
+/* Transición suave para cambios de tema */
+* {
+  transition: 
+    background-color var(--duration-300) var(--ease-in-out),
+    color var(--duration-300) var(--ease-in-out),
+    border-color var(--duration-300) var(--ease-in-out),
+    box-shadow var(--duration-200) var(--ease-out);
+}
+
+/* ========================================
+   ANIMACIONES DE HERRAMIENTAS
+   ======================================== */
+
+/* Transición suave entre herramientas */
+.tool-transition {
+  transition: all var(--duration-300) var(--ease-in-out);
+}
+
+/* Fade in para contenido de herramientas */
+.tool-fade-in {
+  animation: toolFadeIn var(--duration-300) var(--ease-out);
+}
+
+@keyframes toolFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in desde la izquierda para sidebar */
+.sidebar-slide-in {
+  animation: sidebarSlideIn var(--duration-300) var(--ease-out);
+}
+
+@keyframes sidebarSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE FORMULARIOS
+   ======================================== */
+
+/* Fade in para campos de formulario */
+.form-field-fade-in {
+  animation: formFieldFadeIn var(--duration-200) var(--ease-out);
+}
+
+@keyframes formFieldFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Stagger animation para campos de formulario */
+.form-field-stagger > * {
+  animation: formFieldStagger var(--duration-300) var(--ease-out) both;
+}
+
+.form-field-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.form-field-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.form-field-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.form-field-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.form-field-stagger > *:nth-child(5) { animation-delay: 200ms; }
+
+@keyframes formFieldStagger {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE RESULTADOS
+   ======================================== */
+
+/* Bounce in para resultados */
+.results-bounce-in {
+  animation: resultsBounceIn var(--duration-400) var(--ease-out);
+}
+
+@keyframes resultsBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide up para paneles de resultados */
+.results-slide-up {
+  animation: resultsSlideUp var(--duration-300) var(--ease-out);
+}
+
+@keyframes resultsSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE BOTONES
+   ======================================== */
+
+/* Hover effects para botones */
+.btn-hover-lift {
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.btn-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Pulse para botones de acción */
+.btn-pulse {
+  animation: btnPulse 2s infinite;
+}
+
+@keyframes btnPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE CARGA
+   ======================================== */
+
+/* Skeleton loading animation */
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonLoading 1.5s infinite;
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Spinner rotation */
+.spinner-rotate {
+  animation: spinnerRotate 1s linear infinite;
+}
+
+@keyframes spinnerRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE NAVEGACIÓN
+   ======================================== */
+
+/* Hover effect para enlaces del sidebar */
+.sidebar-link-hover {
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.sidebar-link-hover:hover {
+  transform: translateX(5px);
+  background-color: var(--color-surface-hover);
+}
+
+/* Active state animation */
+.sidebar-link-active {
+  animation: sidebarLinkActive var(--duration-300) var(--ease-out);
+}
+
+@keyframes sidebarLinkActive {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   ANIMACIONES DE TEMA
+   ======================================== */
+
+/* Smooth theme transition */
+.theme-transition {
+  transition: 
+    background-color var(--duration-300) var(--ease-in-out),
+    color var(--duration-300) var(--ease-in-out),
+    border-color var(--duration-300) var(--ease-in-out),
+    box-shadow var(--duration-300) var(--ease-in-out);
+}
+
+/* Theme toggle animation */
+.theme-toggle-rotate {
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.theme-toggle-rotate:hover {
+  transform: rotate(180deg);
+}
+
+/* ========================================
+   ANIMACIONES RESPONSIVAS
+   ======================================== */
+
+/* Mobile-first animations */
+@media (max-width: 768px) {
+  .tool-fade-in {
+    animation-duration: var(--duration-200);
+  }
+  
+  .form-field-stagger > * {
+    animation-delay: 0ms !important;
+  }
+}
+
+/* ========================================
+   PREFERENCIAS DE USUARIO
+   ======================================== */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   UTILIDADES DE ANIMACIÓN
+   ======================================== */
+
+/* Delay utilities */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+
+/* Duration utilities */
+.animation-duration-75 { animation-duration: 75ms; }
+.animation-duration-100 { animation-duration: 100ms; }
+.animation-duration-150 { animation-duration: 150ms; }
+.animation-duration-200 { animation-duration: 200ms; }
+.animation-duration-300 { animation-duration: 300ms; }
+.animation-duration-500 { animation-duration: 500ms; }
+
+/* Easing utilities */
+.animation-ease-linear { animation-timing-function: linear; }
+.animation-ease-in { animation-timing-function: var(--ease-in); }
+.animation-ease-out { animation-timing-function: var(--ease-out); }
+.animation-ease-in-out { animation-timing-function: var(--ease-in-out); }

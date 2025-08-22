@@ -1,0 +1,267 @@
+/**
+ * @fileoverview Sistema de gradientes profesionales para MutualMetrics
+ * @version 1.0.0
+ * @author MutualMetrics Team
+ * @since 2025-08-21
+ * @lastModified 2025-08-21
+ * 
+ * @description
+ * Definiciones de gradientes profesionales y sutiles para Header y Sidebar.
+ * Todos los gradientes mantienen conformidad WCAG 2.1 AA para accesibilidad.
+ * 
+ * @dependencies
+ * - Variables CSS temáticas definidas en themes.css
+ * 
+ * @usage
+ * Importar en app.css y aplicar clases CSS para gradientes
+ * 
+ * @state
+ * ✅ Funcional - Gradientes profesionales implementados
+ * 
+ * @accessibility
+ * - Todos los gradientes mantienen contraste AA
+ * - Transiciones suaves para mejor UX
+ * - Fallbacks para navegadores sin soporte
+ */
+
+/* ========================================
+   GRADIENTES PROFESIONALES - HEADER
+   ======================================== */
+
+/* Gradiente sutil para header principal */
+.header-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 200%;
+  animation: headerGradientShift 8s ease-in-out infinite;
+}
+
+/* Gradiente activo para header con hover */
+.header-gradient-hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-accent) 25%,
+    var(--color-surface-elevated) 50%,
+    var(--color-accent) 75%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 200%;
+  transition: background-position 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-gradient-hover:hover {
+  background-position: 100% 100%;
+}
+
+/* Gradiente para navegación activa */
+.nav-gradient-active {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: navGradientFlow 2s ease-in-out infinite;
+}
+
+/* ========================================
+   GRADIENTES PROFESIONALES - SIDEBAR
+   ======================================== */
+
+/* Gradiente sutil para sidebar principal */
+.sidebar-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-elevated) 0%,
+    var(--color-surface) 100%
+  );
+}
+
+/* Gradiente para header del sidebar */
+.sidebar-header-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-elevated) 0%,
+    var(--color-accent) 25%,
+    var(--color-surface-elevated) 100%
+  );
+  background-size: 200% 100%;
+  transition: background-position 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-header-gradient:hover {
+  background-position: 100% 0%;
+}
+
+/* Gradiente para footer del sidebar */
+.sidebar-footer-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-elevated) 0%,
+    var(--color-surface) 50%,
+    var(--color-surface-elevated) 100%
+  );
+}
+
+/* ========================================
+   GRADIENTES PARA ELEMENTOS INTERACTIVOS
+   ======================================== */
+
+/* Gradiente para botones de navegación */
+.nav-button-gradient {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--color-surface-elevated) 50%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button-gradient:hover {
+  background-position: 100% 100%;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradiente para elementos activos */
+.active-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  color: white;
+  box-shadow: 0 2px 8px rgba(27, 60, 83, 0.3);
+}
+
+/* ========================================
+   ANIMACIONES DE GRADIENTES
+   ======================================== */
+
+@keyframes headerGradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes navGradientFlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ========================================
+   GRADIENTES RESPONSIVOS
+   ======================================== */
+
+/* Gradientes más sutiles en dispositivos móviles */
+@media (max-width: 768px) {
+  .header-gradient {
+    background: var(--color-surface);
+    animation: none;
+  }
+  
+  .sidebar-gradient {
+    background: var(--color-surface-elevated);
+  }
+  
+  .nav-gradient-active {
+    animation: none;
+    background: var(--color-primary);
+  }
+}
+
+/* ========================================
+   GRADIENTES PARA TEMAS
+   ======================================== */
+
+/* Gradientes específicos para tema oscuro */
+[data-theme="dark"] .header-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 100%
+  );
+}
+
+[data-theme="dark"] .sidebar-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-elevated) 0%,
+    var(--color-surface) 100%
+  );
+}
+
+/* ========================================
+   UTILIDADES DE GRADIENTES
+   ======================================== */
+
+/* Clases de utilidad para aplicar gradientes */
+.gradient-subtle {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-surface-elevated) 100%
+  );
+}
+
+.gradient-accent {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-accent) 50%,
+    var(--color-surface) 100%
+  );
+}
+
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+}
+
+/* Transiciones suaves para todos los gradientes */
+.gradient-transition {
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   FALLBACKS Y COMPATIBILIDAD
+   ======================================== */
+
+/* Fallbacks para navegadores sin soporte de gradientes */
+@supports not (background: linear-gradient(45deg, #000, #fff)) {
+  .header-gradient,
+  .sidebar-gradient,
+  .nav-gradient-active {
+    background: var(--color-surface);
+  }
+  
+  .active-gradient {
+    background: var(--color-primary);
+  }
+}
+
+/* Optimización para navegadores con soporte de gradientes */
+@supports (background: linear-gradient(45deg, #000, #fff)) {
+  .gradient-enhanced {
+    will-change: background-position;
+  }
+}

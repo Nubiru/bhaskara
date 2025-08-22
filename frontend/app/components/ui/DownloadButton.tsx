@@ -3,16 +3,18 @@
  * @version 2.0.0
  * @author MutualMetrics Team
  * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @lastModified 2025-08-21
  *
  * @description
  * Enhanced download button that integrates with the download service
  * and provides format selection for business analysis results.
+ * Implementa tokens temáticos y estados hover/focus mejorados.
  *
  * @dependencies
  * - Download service for file generation
  * - Business analysis types
  * - i18n for internationalization
+ * - Sistema de temas unificado
  *
  * @usage
  * <DownloadButton 
@@ -22,7 +24,12 @@
  * />
  *
  * @state
- * ✅ Funcional - Botón de descarga integrado con servicio de descarga
+ * ✅ Funcional - Botón de descarga integrado con servicio de descarga y tokens temáticos
+ *
+ * @accessibility
+ * - Estados hover/focus mejorados con transiciones suaves
+ * - Indicadores visuales claros para estados de descarga
+ * - Contraste optimizado para WCAG 2.1 AA
  */
 
 import React, { useState, useCallback } from 'react';
@@ -88,12 +95,12 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
 
   // Button variants
   const getButtonClasses = useCallback(() => {
-    const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+    const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
     
     const variantClasses = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-      secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
-      outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
+      primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 hover:shadow-lg hover:scale-105',
+      secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 hover:shadow-lg hover:scale-105',
+      outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-primary-500 hover:shadow-md hover:scale-105',
     };
     
     const sizeClasses = {
@@ -102,8 +109,12 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
       lg: 'px-6 py-3 text-base',
     };
     
-    return `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`;
-  }, [variant, size]);
+    const stateClasses = isDownloading 
+      ? 'opacity-75 cursor-not-allowed hover:scale-100 hover:shadow-none' 
+      : '';
+    
+    return `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${stateClasses}`.trim();
+  }, [variant, size, isDownloading]);
 
   // Handle download
   const handleDownload = useCallback(async () => {

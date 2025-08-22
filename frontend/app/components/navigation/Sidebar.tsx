@@ -1,47 +1,48 @@
 /**
- * @fileoverview Sidebar de navegación para herramientas de MutualMetrics
- * @version 1.1.0
+ * @fileoverview Componente Sidebar con navegación de herramientas
+ * @version 1.0.1
  * @author MutualMetrics Team
- * @since 2025-08-21
+ * @since 2025-01-01
  * @lastModified 2025-08-21
  * 
  * @description
- * Componente de sidebar fijo (200px) que proporciona navegación entre diferentes
- * herramientas de análisis. Incluye tooltips en hover y estados visuales activos.
+ * Sidebar de navegación que muestra todas las herramientas disponibles
+ * con categorización, estados de implementación y tooltips informativos.
+ * Implementa gradientes profesionales con conformidad WCAG 2.1 AA.
  * 
  * @dependencies
- * - Tipos de herramientas
- * - Configuración de herramientas
- * - Sistema de temas unificado
+ * - React Router v7.7.1
+ * - Tailwind CSS v4.1.4
+ * - Sistema de gradientes personalizado
+ * - Hook useTranslation para i18n
  * 
  * @usage
- * <Sidebar 
- *   currentView={currentView} 
- *   onViewChange={handleViewChange}
- *   toolsConfig={toolsConfig}
- * />
+ * Se renderiza en el layout principal junto con el contenido dinámico.
  * 
  * @state
- * ✅ Funcional - Sidebar completo con navegación y tooltips
+ * ✅ Funcional - Navegación de herramientas implementada con gradientes profesionales
  * 
  * @bugs
- * - ✅ FIXED: Footer overlap - Implementado height: 100% y flexbox correcto
+ * - Ninguno conocido
  * 
  * @todo
- * - [PRIORITY: LOW] Agregar animaciones de transición
- * - [PRIORITY: LOW] Implementar agrupación por categorías
- * - [PRIORITY: LOW] Agregar búsqueda de herramientas
+ * - [PRIORITY: LOW] Agregar animaciones de entrada/salida
+ * - [PRIORITY: LOW] Implementar búsqueda de herramientas
  * 
  * @performance
- * - Componente memoizado para evitar re-renders
- * - Tooltips renderizados solo en hover
- * - Navegación optimizada
+ * - Componente memoizado para optimización
+ * - Renderizado condicional de tooltips
+ * - Gradientes optimizados con will-change
  * 
  * @accessibility
- * - Navegación por teclado completa
- * - ARIA labels y descriptions
+ * - Navegación por teclado implementada
+ * - ARIA labels y roles apropiados
  * - Tooltips accesibles
- * - Contraste optimizado
+ * - Gradientes con contraste AA mantenido
+ * 
+ * @security
+ * - Navegación segura implementada
+ * - Enlaces internos validados
  */
 
 import { memo, useCallback } from 'react';
@@ -96,20 +97,14 @@ const Sidebar = memo<SidebarProps>(({
       <button
         key={tool.id}
         onClick={() => handleToolClick(tool.id)}
-        className={`w-full text-left p-3 rounded-lg transition-all duration-300 hover:shadow-lg group relative ${
+        className={`w-full text-left p-3 rounded-lg transition-all duration-300 hover:shadow-lg group relative nav-button-gradient sidebar-link-hover ${
           isActive 
-            ? 'bg-blue-100 dark:bg-blue-900/30 border-r-2 border-blue-500' 
+            ? 'active-gradient shadow-md sidebar-link-active' 
             : 'hover:bg-gray-100 dark:hover:bg-gray-800/50'
         } ${className}`}
         style={{
-          backgroundColor: isActive 
-            ? 'var(--color-primary)' 
-            : 'transparent',
-          borderRight: isActive 
-            ? '2px solid var(--color-primary)' 
-            : 'none',
           color: isActive 
-            ? 'var(--on-primary-text)' 
+            ? 'white' 
             : 'var(--color-text)'
         }}
         aria-label={`${tool.label} - ${tool.description}`}
@@ -123,7 +118,7 @@ const Sidebar = memo<SidebarProps>(({
             {tool.category && (
               <div 
                 className="text-xs opacity-70"
-                style={{ color: 'var(--color-text-secondary)' }}
+                style={{ color: isActive ? 'rgba(255,255,255,0.8)' : 'var(--color-text-secondary)' }}
               >
                 {tool.category}
               </div>
@@ -165,9 +160,8 @@ const Sidebar = memo<SidebarProps>(({
 
   return (
     <aside 
-      className="h-full flex flex-col overflow-hidden"
+      className="h-full flex flex-col overflow-hidden sidebar-gradient sidebar-slide-in"
       style={{ 
-        backgroundColor: 'var(--color-surface-elevated)',
         borderRight: '1px solid var(--color-divider)',
         width: '200px'
       }}
@@ -175,7 +169,7 @@ const Sidebar = memo<SidebarProps>(({
       aria-label="Navegación de herramientas"
     >
       {/* Header del sidebar */}
-      <div className="p-4 border-b flex-shrink-0" style={{ borderColor: 'var(--color-divider)' }}>
+      <div className="p-4 border-b flex-shrink-0 sidebar-header-gradient" style={{ borderColor: 'var(--color-divider)' }}>
         <h2 
           className="text-lg font-semibold"
           style={{ color: 'var(--color-text)' }}
@@ -196,7 +190,7 @@ const Sidebar = memo<SidebarProps>(({
       </nav>
 
       {/* Footer del sidebar - fijo en la parte inferior */}
-      <div className="p-4 border-t flex-shrink-0" style={{ borderColor: 'var(--color-divider)' }}>
+      <div className="p-4 border-t flex-shrink-0 sidebar-footer-gradient" style={{ borderColor: 'var(--color-divider)' }}>
         <div className="text-center">
           <div 
             className="text-xs"

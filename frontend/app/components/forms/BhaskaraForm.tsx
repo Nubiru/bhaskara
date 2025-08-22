@@ -549,7 +549,7 @@ const BhaskaraForm = memo<BhaskaraFormProps>(({
       <section aria-labelledby="coefficients-heading">
         {/* Heading removed to reduce repetition and visual clutter */}
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 form-field-stagger">
           {COEFFICIENT_FIELDS.map(renderCoefficientField)}
         </div>
         

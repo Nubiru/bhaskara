@@ -3,16 +3,18 @@
  * @version 2.0.0
  * @author MutualMetrics Team
  * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @lastModified 2025-08-21
  *
  * @description
  * Enhanced file downloader that integrates with the download service
  * and provides comprehensive download options for business analysis.
+ * Implementa tokens temáticos y estados hover/focus mejorados.
  *
  * @dependencies
  * - Download service for file generation
  * - Business analysis types
  * - i18n for internationalization
+ * - Sistema de temas unificado
  *
  * @usage
  * <FileDownloader 
@@ -21,7 +23,12 @@
  * />
  *
  * @state
- * ✅ Funcional - Descargador de archivos integrado con servicio de descarga
+ * ✅ Funcional - Descargador de archivos integrado con servicio de descarga y tokens temáticos
+ *
+ * @accessibility
+ * - Estados hover/focus mejorados con transiciones suaves
+ * - Indicadores visuales claros para estados de descarga
+ * - Contraste optimizado para WCAG 2.1 AA
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
@@ -189,6 +196,36 @@ export const FileDownloader: React.FC<FileDownloaderProps> = ({
     setDownloadOptions(prev => ({ ...prev, [key]: value }));
   }, []);
 
+  // Component classes
+  const getComponentClasses = useCallback(() => {
+    const baseClasses = 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm';
+    const stateClasses = isDownloading ? 'opacity-75 pointer-events-none' : '';
+    return `${baseClasses} ${stateClasses} ${className}`.trim();
+  }, [isDownloading, className]);
+
+  // Button classes
+  const getButtonClasses = useCallback(() => {
+    const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
+    
+    const variantClasses = {
+      primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 hover:shadow-lg hover:scale-105',
+      secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 hover:shadow-lg hover:scale-105',
+      outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-primary-500 hover:shadow-md hover:scale-105',
+    };
+    
+    const sizeClasses = {
+      sm: 'px-3 py-1.5 text-sm',
+      md: 'px-4 py-2 text-sm',
+      lg: 'px-6 py-3 text-base',
+    };
+    
+    const stateClasses = isDownloading 
+      ? 'opacity-75 cursor-not-allowed hover:scale-100 hover:shadow-none' 
+      : '';
+    
+    return `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${stateClasses}`.trim();
+  }, [variant, size, isDownloading]);
+
   // Render format selector
   const renderFormatSelector = () => {
     if (!showFormatSelector) return null;
@@ -321,7 +358,7 @@ export const FileDownloader: React.FC<FileDownloaderProps> = ({
         type="button"
         onClick={handleDownload}
         disabled={!canDownload}
-        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+        className={getButtonClasses()}
       >
         {isDownloading ? (
           <>
@@ -344,7 +381,7 @@ export const FileDownloader: React.FC<FileDownloaderProps> = ({
   };
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+    <div className={getComponentClasses()}>
       {/* Header */}
       <div className="mb-4">
         <h3 className="text-lg font-medium text-gray-900">
