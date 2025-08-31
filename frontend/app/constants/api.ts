@@ -3,11 +3,12 @@
  * @version 1.0.0
  * @author MutualMetrics Team
  * @since 2025-01-01
- * @lastModified 2025-01-01
+ * @lastModified 2025-08-26
  *
  * @description
- * Constantes centralizadas para configuración de API, endpoints,
- * timeouts, y configuraciones de retry.
+ * Constantes centralizadas para configuración de API v1, endpoints,
+ * timeouts, y configuraciones de retry. Actualizado para nueva
+ * arquitectura de backend con endpoints /api/v1/* y sin endpoints legacy.
  *
  * @dependencies
  * - Ninguna
@@ -16,7 +17,7 @@
  * import { API_ENDPOINTS, TIMEOUTS } from '../constants/api';
  *
  * @state
- * ✅ Funcional - Constantes para configuración de API
+ * ✅ Funcional - Constantes para configuración de API v1 (Backend Refactored)
  *
  * @bugs
  * - Ninguno conocido
@@ -42,13 +43,36 @@
  */
 
 /**
- * API Endpoints
+ * API Endpoints - Clean API v1 architecture (no legacy endpoints)
  */
 export const API_ENDPOINTS = {
-  ANALYZE_BHASKARA: '/analizar/bhaskara',
-  ANALYZE_ECONOMIA: '/analizar/economia',
-  DOWNLOAD_ANALYSIS: '/descargar/analisis',
-  HEALTH_CHECK: '/health',
+  // Math Analysis Endpoints
+  MATH_BHASKARA: '/api/v1/math/bhaskara',
+  MATH_QUADRATIC: '/api/v1/math/quadratic',
+  
+  // Business Analysis Endpoints
+  BUSINESS_REVENUE: '/api/v1/business/revenue',
+  BUSINESS_COSTS: '/api/v1/business/costs',
+  BUSINESS_PROFIT: '/api/v1/business/profit',
+  BUSINESS_BREAKEVEN: '/api/v1/business/breakeven',
+  
+  // Financial Tools Endpoints
+  FINANCE_COMPOUND_INTEREST: '/api/v1/finance/compound-interest',
+  FINANCE_CURRENCY_CONVERTER: '/api/v1/finance/currency-converter',
+  
+  // Utility Endpoints
+  UTILS_NUMBER_CONVERTER: '/api/v1/utils/number-converter',
+  
+  // Download endpoints
+  DOWNLOAD_ANALYSIS: '/api/v1/download/analysis',
+  DOWNLOAD_REVENUE: '/api/v1/download/revenue',
+  DOWNLOAD_COSTS: '/api/v1/download/costs',
+  DOWNLOAD_PROFIT: '/api/v1/download/profit',
+  DOWNLOAD_BREAKEVEN: '/api/v1/download/breakeven',
+  
+  // System endpoints
+  HEALTH_CHECK: '/api/v1/health',
+  READINESS_CHECK: '/api/v1/ready',
 } as const;
 
 /**
@@ -178,12 +202,12 @@ export const ENV_CONFIG = {
 } as const;
 
 /**
- * API Base URLs by environment
+ * API Base URLs by environment - Nginx proxy setup
  */
 export const API_BASE_URLS = {
-  [ENV_CONFIG.DEVELOPMENT]: 'http://localhost:8000',
+  [ENV_CONFIG.DEVELOPMENT]: 'http://localhost', // Nginx proxy on port 80, endpoints include /api/v1/
   [ENV_CONFIG.PRODUCTION]: import.meta.env.VITE_API_BASE_URL || 'https://api.mutualmetrics.com',
-  [ENV_CONFIG.TEST]: 'http://localhost:8000',
+  [ENV_CONFIG.TEST]: 'http://localhost', // Nginx proxy on port 80, endpoints include /api/v1/
 } as const;
 
 /**

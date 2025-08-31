@@ -48,9 +48,9 @@ docker compose down
 
 ### Accesos
 - **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
+- **Backend**: http://localhost:8081
+- **API Docs**: http://localhost:8081/docs
+- **Health Check**: http://localhost:8081/health
 
 ## 🎯 Configuración de Stack Unificado
 
@@ -81,7 +81,7 @@ docker run -p 80:80 -p 8000:8000 mutualmetrics:stack
 
 ### Accesos
 - **Frontend**: http://localhost (puerto 80)
-- **Backend Directo**: http://localhost:8000
+- **Backend Directo**: http://localhost:8081
 - **Backend via Proxy**: http://localhost/api
 - **API Docs**: http://localhost/api/docs
 
@@ -115,7 +115,7 @@ location /api/ {
 ### Health Checks
 ```bash
 # Verificar estado
-curl http://localhost:8000/health
+curl http://localhost:8081/health
 
 # Logs del contenedor
 docker logs <container_id>
@@ -137,7 +137,7 @@ docker compose build frontend
 #### Backend no responde
 ```bash
 # Verificar health check
-curl http://localhost:8000/health
+curl http://localhost:8081/health
 
 # Ver logs
 docker compose logs backend
@@ -147,7 +147,7 @@ docker compose logs backend
 ```bash
 # Ver puertos en uso
 netstat -tulpn | grep :80
-netstat -tulpn | grep :8000
+netstat -tulpn | grep :8081
 
 # Cambiar puertos en docker-compose.yml
 ```

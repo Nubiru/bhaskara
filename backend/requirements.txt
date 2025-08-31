@@ -1,7 +1,65 @@
-# Dependencias del backend FastAPI
-fastapi
-uvicorn[standard]
-python-dotenv
-# pydantic ya es dependencia de fastapi
-# numpy
-# pandas
+# -*- coding: utf-8 -*-
+# @fileoverview Python dependencies for MutualMetrics Backend
+# @version 2.0.0
+# @since 2025-08-25
+# @lastModified 2025-08-26
+#
+# @description
+# Production-ready Python dependencies for the enhanced backend architecture
+# with comprehensive middleware, error handling, and security features.
+#
+# @dependencies
+# - FastAPI framework and extensions
+# - HTTP client libraries
+# - Data validation and serialization
+# - Security and middleware components
+# - Development and testing tools
+#
+# @state
+# ✅ Complete - All required dependencies specified
+#
+# @performance
+# - Optimized dependency versions
+# - Minimal footprint for production
+# - Security-focused package selection
+
+# Core FastAPI Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# HTTP and Networking
+aiohttp==3.9.1
+httpx==0.25.2
+requests==2.31.0
+
+# Data Processing and Validation
+python-multipart==0.0.6
+email-validator==2.1.0
+
+# Security and Middleware
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Logging and Monitoring
+structlog==23.2.0
+python-json-logger==2.0.7
+
+# Development and Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Production and Deployment
+gunicorn==21.2.0
+supervisor==4.2.5
+
+# Additional Utilities
+python-dotenv==1.0.0
+click==8.1.7
+rich==13.7.0

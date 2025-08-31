@@ -3,7 +3,7 @@
 # @version 1.0.0
 # @author Software Engineer
 # @since 2025-08-20
-# @lastModified 2025-08-20
+# @lastModified 2025-08-21
 
 # Stage 1: Frontend Build
 FROM node:20-alpine AS frontend-builder
@@ -41,7 +41,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
     index index.html; \
     location / { try_files $uri $uri/ /index.html; } \
     location /api/ { \
-        proxy_pass http://127.0.0.1:8000/; \
+        proxy_pass http://127.0.0.1:8081/; \
         proxy_set_header Host $host; \
         proxy_set_header X-Real-IP $remote_addr; \
     } \
@@ -62,24 +62,49 @@ autostart=true \n\
 autorestart=true \n\
 stdout_logfile=/var/log/nginx.log \n\
 stderr_logfile=/var/log/nginx-error.log \n\
+priority=100 \n\
 [program:backend] \n\
-command=uvicorn main:app --host 127.0.0.1 --port 8000 \n\
+command=uvicorn app.main:app --host 127.0.0.1 --port 8081 \n\
 directory=/app/backend \n\
 autostart=true \n\
 autorestart=true \n\
 stdout_logfile=/var/log/backend.log \n\
-stderr_logfile=/var/log/backend-error.log' > /etc/supervisor/conf.d/supervisord.conf
+stderr_logfile=/var/log/backend-error.log \n\
+priority=200 \n\
+startretries=3 \n\
+startsecs=5 \n\
+redirect_stderr=true \n\
+stdout_logfile_maxbytes=50MB \n\
+stdout_logfile_backups=10' > /etc/supervisor/conf.d/supervisord.conf
 
 # Create log directories with proper permissions
 RUN mkdir -p /var/log && \
     touch /var/log/supervisord.log /var/log/nginx.log /var/log/nginx-error.log /var/log/backend.log /var/log/backend-error.log && \
     chmod 755 /var/log && \
-    chmod 644 /var/log/*.log
+    chmod 644 /var/log/*.log && \
+    chown -R root:root /var/log
+
+# Create export directory with proper permissions
+RUN mkdir -p /tmp/exports && \
+    chmod 755 /tmp/exports && \
+    chown -R root:root /tmp/exports
+
+# Create startup script for better error handling
+RUN echo '#!/bin/bash \n\
+echo "Starting MutualMetrics Stack..." \n\
+echo "Checking dependencies..." \n\
+which nginx || { echo "Nginx not found"; exit 1; } \n\
+which uvicorn || { echo "Uvicorn not found"; exit 1; } \n\
+echo "Checking Python modules..." \n\
+python -c "import app.main; print(\"✓ Main module import successful\")" || { echo "✗ Main module import failed"; exit 1; } \n\
+echo "Starting supervisord..." \n\
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf' > /app/start.sh && \
+    chmod +x /app/start.sh
 
 WORKDIR /app/backend
-EXPOSE 80 8000
+EXPOSE 80 8081
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:8081/health || exit 1
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/app/start.sh"]

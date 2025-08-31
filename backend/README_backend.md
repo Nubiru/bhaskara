@@ -78,24 +78,33 @@ SECRET_KEY=your-secret-key-here
 
 ```
 backend/
-├── main.py                 # FastAPI application entry point
-├── requirements.txt        # Python dependencies
-├── README_backend.md       # This file
-├── routers/               # API route definitions
-│   ├── __init__.py
-│   ├── analysis.py        # Mathematical analysis endpoints
-│   └── business.py        # Business analytics endpoints
-├── services/              # Business logic services
-│   ├── __init__.py
-│   ├── analysis_service.py # Mathematical analysis logic
-│   └── business_service.py # Business analytics logic
-├── types/                 # Pydantic models and type definitions
-│   ├── __init__.py
-│   ├── quadratic.py       # Quadratic analysis types
-│   └── business.py        # Business analysis types
-└── utils/                 # Utility functions
-    ├── __init__.py
-    └── validators.py      # Input validation utilities
+├── config/                 # Professional configuration management
+│   ├── settings.py        # Pydantic settings with environment variables
+│   └── __init__.py        # Configuration exports
+├── app/                   # Main application package
+│   ├── core/              # Core application components
+│   │   ├── exceptions.py  # Custom exception hierarchy
+│   │   ├── middleware.py  # Professional middleware
+│   │   ├── dependencies.py # Dependency injection system
+│   │   └── __init__.py    # Core exports
+│   ├── api/               # API layer
+│   │   └── v1/            # API version 1
+│   │       ├── router.py  # Main API router
+│   │       └── __init__.py # API exports
+│   ├── models/            # Data models
+│   │   ├── schemas.py     # Pydantic schemas
+│   │   ├── domain.py      # Domain models
+│   │   └── __init__.py    # Model exports
+│   ├── services/          # Business logic layer
+│   │   ├── math_service.py # Mathematical analysis
+│   │   ├── business_service.py # Business analytics
+│   │   ├── finance_service.py # Financial analysis
+│   │   ├── external/      # External API services
+│   │   │   └── currency_api.py # Real currency conversion
+│   │   └── __init__.py    # Service exports
+│   ├── main.py            # New FastAPI application entry point
+│   └── __init__.py        # Main package exports
+└── requirements.txt        # Updated dependencies
 ```
 
 ## API Endpoints
@@ -223,7 +232,7 @@ sudo uvicorn main:app --reload --port 8000
 
 #### 4. CORS Issues
 
-**Error:** `Access to fetch at 'http://localhost:8000/...' from origin 'http://localhost:5173' has been blocked by CORS policy`
+**Error:** `Access to fetch at 'http://localhost:8081/...' from origin 'http://localhost:5173' has been blocked by CORS policy`
 
 **Solution:**
 - Check `.env` file has correct `ALLOWED_ORIGINS`
@@ -329,7 +338,7 @@ logging.basicConfig(
 
 ```bash
 # Check server health
-curl http://localhost:8000/health
+curl http://localhost:8081/health
 
 # Expected response
 {

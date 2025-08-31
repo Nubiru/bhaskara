@@ -3,7 +3,7 @@
  * @version 1.0.0
  * @author MutualMetrics Team
  * @since 2025-08-21
- * @lastModified 2025-08-21
+ * @lastModified 2025-08-26
  * 
  * @description
  * Contains all English translations specific to the number system converter module.

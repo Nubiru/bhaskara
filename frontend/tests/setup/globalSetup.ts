@@ -43,7 +43,7 @@ module.exports = async function globalSetup() {
   // Set test environment variables
   process.env.NODE_ENV = 'test';
   process.env.REACT_APP_ENV = 'test';
-  process.env.REACT_APP_API_BASE_URL = 'http://localhost:8000';
+  process.env.REACT_APP_API_BASE_URL = 'http://localhost:8081';
   
   // Configure timezone for consistent test results
   process.env.TZ = 'UTC';

@@ -42,7 +42,12 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { useLocalHistory } from './useLocalHistory';
-import { apiService } from '../services/api';
+import { 
+  mathApiService, 
+  businessApiService, 
+  financeApiService,
+  downloadApiService 
+} from '../services/api';
 import { withRetry, getErrorMessage, validateAnalysisRequest } from '../utils/api-helpers';
 import type { 
   AnalysisHandlers, 
@@ -244,7 +249,7 @@ export const useAnalysisHandlers = () => {
 
       // Llamada real al backend con retry automático
       const result = await withRetry(
-        () => apiService.analyzeBhaskara(apiRequest),
+        () => mathApiService.analyzeBhaskara(apiRequest),
         { maxAttempts: 3, baseDelay: 1000 }
       );
       
@@ -280,7 +285,7 @@ export const useAnalysisHandlers = () => {
 
       // Llamada real al backend con retry automático
       const result = await withRetry<BreakEvenAnalysisResult>(
-        () => apiService.analyzeBreakEven(data),
+        () => businessApiService.analyzeBreakEven(data),
         { maxAttempts: 3, baseDelay: 1000 }
       );
       
@@ -316,7 +321,7 @@ export const useAnalysisHandlers = () => {
 
       // Llamada real al backend con retry automático
       const result = await withRetry<RevenueAnalysisResult>(
-        () => apiService.analyzeRevenue(data),
+        () => businessApiService.analyzeRevenue(data),
         { maxAttempts: 3, baseDelay: 1000 }
       );
       
@@ -412,7 +417,7 @@ export const useAnalysisHandlers = () => {
 
       // Llamada real al backend
       const result = await withRetry<CompoundInterestResult>(
-        () => apiService.analyzeCompoundInterest(data)
+        () => financeApiService.analyzeCompoundInterest(data)
       );
       
       console.log('Análisis de interés compuesto completado:', result);

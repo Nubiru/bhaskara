@@ -3,7 +3,7 @@
  * @version 1.0.0
  * @author MutualMetrics Team
  * @since 2025-08-21
- * @lastModified 2025-08-21
+ * @lastModified 2025-08-26
  * 
  * @description
  * Contiene todas las traducciones en español específicas para el módulo
